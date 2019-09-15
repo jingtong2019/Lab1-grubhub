@@ -29,12 +29,18 @@ app.get('/', function(req, res) {
 
 app.post('/', function(req, res) {
     first = parseFloat(req.body.first);
-    //console.log(typeof(first));
     second = parseFloat(req.body.second);
-    result = first + second;
+    let operator = req.body.operator;
+    switch(operator) {
+        case "+": result = (first*10000 + second*10000)/10000; break;
+        case "-": result = first - second; break;
+        case "*": result = first * second; break;
+        case "/": result = first / second; break;
+    }
+    
     res.render('home', {result:result, first:first, second:second});
-    console.log(`result is ${result}`);
-    //res.render('home'); Result: <%= @result%>
+    //console.log(`result is ${result}`);
+    console.log(req.body.operator);
 });
 
 

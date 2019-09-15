@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>EJS engine</title>
+    <title>Calculator</title>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
   </head>
   <body>
@@ -13,7 +13,10 @@
         <form method="POST">
             first: <input type="number" value="<%= first %>" step="any" name="first"><br>
             second: <input type="number" value="<%= second %>" step="any" name="second"><br>
-            <button type="submit">Add</button>
+            <button type="submit" name="operator" value="+">+</button>
+            <button type="submit" name="operator" value="-">-</button>
+            <button type="submit" name="operator" value="*">*</button>
+            <button type="submit" name="operator" value="/">/</button>
         </form>
         <p> Result: <%= result %></p>
 
