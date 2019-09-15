@@ -3,22 +3,22 @@
   <head>
     <meta charset="utf-8">
     <title>Calculator</title>
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
   </head>
   <body>
     <div class="container">
-      <div class="jumbotron">
-        Try This Calculator:
+      <div class="center">
+        <h1 class="title">Try This Calculator:</h1>
 
         <form method="POST">
-            first: <input type="number" value="<%= first %>" step="any" name="first"><br>
-            second: <input type="number" value="<%= second %>" step="any" name="second"><br>
+            <input type="number" value="<%= first %>" step="any" name="first" placeholder="First number" autofocus><br>
+            <input type="number" value="<%= second %>" step="any" name="second" placeholder="Second number"><br>
             <button type="submit" name="operator" value="+">+</button>
             <button type="submit" name="operator" value="-">-</button>
             <button type="submit" name="operator" value="*">*</button>
             <button type="submit" name="operator" value="/">/</button>
         </form>
-        <p> Result: <%= result %></p>
+        <p class="others"> Result: <%= result %></p>
 
       </div>
     </div>
