@@ -7,9 +7,33 @@ class App extends Component {
   constructor(){
     super();
     this.state = {
-      operation: "TEST"
+      operation: ""
     }
   }
+
+  onClick = button => {
+    if(button === "="){
+        //this.calculate()
+    }
+    else if(button === "AC"){
+      this.setState({
+        operation: ""
+      })
+    }
+    else if(button === "C"){
+      this.setState({
+        operation: this.state.operation.slice(-1, 0)
+      })
+    }
+    else {
+      this.setState({
+          operation: this.state.operation + button
+      })
+    }
+};
+
+
+
 
   render() {
     return (
