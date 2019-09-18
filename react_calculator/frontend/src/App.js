@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import './App.css';
 import AllButtons from './components/AllButtons';
+import Operations from './components/Operations';
 
 class App extends Component {
   constructor(){
     super();
     this.state = {
-      operation: ""
+      operation: "TEST"
     }
   }
 
@@ -14,6 +15,7 @@ class App extends Component {
     return (
       <div className="App">
         <h1> Calculator </h1>
+        <Operations operation={this.state.operation}/>
         <AllButtons onClick={this.onClick}/>
       </div>
     );
