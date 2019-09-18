@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import AllButtons from './components/AllButtons';
 
 class App extends Component {
   constructor(){
@@ -12,7 +13,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <p> test test </p>
+        <h1> Calculator </h1>
+        <AllButtons onClick={this.onClick}/>
       </div>
     );
   }
