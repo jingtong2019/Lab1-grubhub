@@ -19,30 +19,37 @@ app.use(session({
     activeDuration      :  5 * 60 * 1000
 }));
 
-// app.use(bodyParser.urlencoded({
-//     extended: true
-//   }));
+app.use(bodyParser.urlencoded({
+    extended: true
+  }));
 app.use(bodyParser.json());
 
 //Allow Access Control
 app.use(function(req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
-    res.setHeader('Cache-Control', 'no-cache');
-    next();
-  });
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
+  res.setHeader('Cache-Control', 'no-cache');
+  next();
+});
 
 
-//Route to get All Books when user visits the Home Page
-// app.get('/home', function(req,res){
-//     console.log("Inside Home Login");    
-//     res.writeHead(200,{
-//         'Content-Type' : 'application/json'
-//     });
-    
-// })
+
+app.post('/App', function(req,res){
+  console.log(req.body.operation);
+  let ans;
+  try {
+    ans = (eval(req.body.operation)).toString();
+  } catch (e) {
+    ans = "error";
+  }
+  res.writeHead(200,{
+    'Content-Type' : 'text/plain'
+  })
+  //res.write(ans);
+  res.end(ans);
+})
 
 
 

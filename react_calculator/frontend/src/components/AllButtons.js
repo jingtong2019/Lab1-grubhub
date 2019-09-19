@@ -4,8 +4,8 @@ class AllButtons extends Component {
     render(){
         return (
             <div>
-                <button name="AC" onClick={e => this.props.onClick(e.target.name)}>CE</button>
-                <button name="C" onClick={e => this.props.onClick(e.target.name)}>C</button><br/>
+                <button className = "bigbutton" name="AC" onClick={e => this.props.onClick(e.target.name)}>AC</button>
+                <button className = "bigbutton" name="C" onClick={e => this.props.onClick(e.target.name)}>C</button><br/>
                 <button name="1" onClick={e => this.props.onClick(e.target.name)}>1</button>
                 <button name="2" onClick={e => this.props.onClick(e.target.name)}>2</button>
                 <button name="3" onClick={e => this.props.onClick(e.target.name)}>3</button>

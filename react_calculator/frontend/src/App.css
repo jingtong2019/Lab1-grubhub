@@ -19,6 +19,41 @@
   color: white;
 }
 
+.operation {
+  height: 60px;
+  background-color: #bbb;
+  width: 100%;
+}
+
+.operation p {
+  font-size: 40px;
+  margin: 5px;
+}
+
+.bigbutton {
+  width: 10%;
+  height: 50px;
+  font-size: 20px;
+}
+.button {
+  display: block;
+  background-color: rgba(16, 143, 202, 0.637);
+}
+
+button {
+  width: 5%;
+  height: 50px;
+  font-size: 20px;
+  background-color: rgba(56, 55, 55, 0.712);
+
+}
+
+.calculator {
+  max-width: 400px;
+  margin: auto;
+  text-align: center;
+}
+
 .App-link {
   color: #61dafb;
 }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import axios from 'axios';
 import AllButtons from './components/AllButtons';
 import Operations from './components/Operations';
 
@@ -11,9 +12,24 @@ class App extends Component {
     }
   }
 
+
   onClick = button => {
     if(button === "="){
-        //this.calculate()
+      const data = {
+        operation : this.state.operation
+      }
+      //set the with credentials to true
+      axios.defaults.withCredentials = true;
+      //make a post request with the user data
+      axios.post('http://localhost:3001/App',data)
+          .then(response => {
+              console.log("Status Code : ",response.status);
+              if(response.status === 200){
+                  this.setState({
+                    operation: response.data
+                  })
+              }
+      });
     }
     else if(button === "AC"){
       this.setState({
@@ -31,9 +47,6 @@ class App extends Component {
       })
     }
 };
-
-
-
 
   render() {
     return (
