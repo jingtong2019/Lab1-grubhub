@@ -15,8 +15,12 @@ class App extends Component {
 
   onClick = button => {
     if(button === "="){
+      let result = this.state.operation;
+      if(result.includes('--')){
+        result = result.replace('--','+')
+      }
       const data = {
-        operation : this.state.operation
+        operation : result
       }
       //set the with credentials to true
       axios.defaults.withCredentials = true;
@@ -24,9 +28,10 @@ class App extends Component {
       axios.post('http://localhost:3001/App',data)
           .then(response => {
               console.log("Status Code : ",response.status);
+              console.log("type",typeof(response.data));
               if(response.status === 200){
                   this.setState({
-                    operation: response.data
+                    operation: (response.data).toString()
                   })
               }
       });
@@ -37,8 +42,10 @@ class App extends Component {
       })
     }
     else if(button === "C"){
+      console.log(this.state.operation);
+      console.log(typeof(this.state.operation));
       this.setState({
-        operation: this.state.operation.slice(-1, 0)
+        operation: this.state.operation.slice(0, -1)
       })
     }
     else {

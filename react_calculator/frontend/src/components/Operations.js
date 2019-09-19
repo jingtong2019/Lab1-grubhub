@@ -5,7 +5,7 @@ class Operations extends Component {
         let {operation} = this.props;
         return (
             <div>
-                <p>{operation}</p>
+                <p className = "showbar">{operation}</p>
             </div>
         );
     }

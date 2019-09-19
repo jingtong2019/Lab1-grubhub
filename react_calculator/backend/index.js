@@ -38,7 +38,7 @@ app.use(function(req, res, next) {
 
 app.post('/App', function(req,res){
   console.log(req.body.operation);
-  let ans;
+  let ans = "";
   try {
     ans = (eval(req.body.operation)).toString();
   } catch (e) {

@@ -19,25 +19,29 @@
   color: white;
 }
 
-.operation {
-  height: 60px;
-  background-color: #bbb;
-  width: 100%;
-}
-
-.operation p {
-  font-size: 40px;
-  margin: 5px;
+.showbar {
+  margin: 0 auto;
+  text-align: right;
+  height: 50px;
+  background-color: rgb(231, 230, 230);
+  width: 19.6%;
+  border-style: inset;
+  font-size: 20px;
 }
 
 .bigbutton {
   width: 10%;
   height: 50px;
   font-size: 20px;
+  background-color: rgba(224, 116, 14, 0.637);
+  border-style: inset;
 }
-.button {
-  display: block;
-  background-color: rgba(16, 143, 202, 0.637);
+.operbutton {
+  width: 5%;
+  height: 50px;
+  font-size: 20px;
+  background-color: rgba(224, 116, 14, 0.637);
+  border-style: inset;
 }
 
 button {
@@ -45,14 +49,9 @@ button {
   height: 50px;
   font-size: 20px;
   background-color: rgba(56, 55, 55, 0.712);
-
+  border-style: inset;
 }
 
-.calculator {
-  max-width: 400px;
-  margin: auto;
-  text-align: center;
-}
 
 .App-link {
   color: #61dafb;
