@@ -23,7 +23,7 @@ function setLoginError(isLoginError) {
     };
 }
 
-export function login(email, password) {
+export function loginFunc(email, password) {
     return dispatch => {
         dispatch(setLoginPending(true));
         dispatch(setLoginSuccess(false));
