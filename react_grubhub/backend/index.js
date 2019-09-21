@@ -34,9 +34,41 @@ app.use(function(req, res, next) {
   next();
 });
 
+
+var mysql = require('mysql');
+
+var con = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "14371437",
+  database: 'grubhub'
+});
+
+
 var cusers = [{email: "admin@gmail.com", password: "admin"}];
+var ousers = [{email: "owner@gmail.com", password: "owner"}];
 
 app.post('/csignup', function(req,res){
+  let sql = "INSERT INTO customers (email, password, fname, lname) VALUES ?;";
+  let values = [[req.body.email, req.body.password, req.body.fname, req.body.lname]];
+  con.connect(function(err) {
+    if (err) throw err;
+    console.log("Connected!");
+    con.query(sql, [values], function (err, result) {
+      if (err) throw err;
+      console.log("Result: " + result);
+    });
+  });
+  //cusers.push({fname: req.body.fname, lname: req.body.lname, email: req.body.email, password: req.body.password});
+  //console.log(cusers);
+  res.writeHead(200,{
+    'Content-Type' : 'text/plain'
+  })
+  //res.write(ans);
+  res.end("success");
+})
+
+app.post('/osignup', function(req,res){
 
   cusers.push({fname: req.body.fname, lname: req.body.lname, email: req.body.email, password: req.body.password});
   console.log(cusers);
@@ -66,6 +98,7 @@ app.post('/', function(req,res){
     }
   });
 })
+
 
 
 //start your server on port 3001
