@@ -1,11 +1,15 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {loginFunc} from '../redux_files/reducer/index';
+//import {Redirect} from 'react-router';
+import {Link} from 'react-router-dom';
 
 class Login extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            isSignupClicked: false
+        };
     }
 
     onSubmit = (e) => {
@@ -14,23 +18,36 @@ class Login extends Component {
         this.props.loginFunc(email, password);
     }
 
+
     render() {
-        let {email, password} = this.state;
+        //let {email, password} = this.state;
+        // let redirectVar = null;
+        // console.log(this.state.isSignupClicked);
+        // if (this.state.isSignupClicked) {
+        //     redirectVar = <Redirect to= "/signup"/>
+        // }
+
         let {isLoginPending, isLoginSuccess, isLoginError} = this.props;
 
+
         return (
-            <div>
-                <form name = 'loginForm' onSubmit={this.onSubmit}>
-                    <label>Email:</label>
-                    <input type="email" name="email" onChange={e=>this.setState({email:e.target.value})}/><br/>
-                    <label>Password:</label>
-                    <input type="password" name="password" onChange={e=>this.setState({password:e.target.value})}/><br/>
-                    <input type="submit" value="Login" />
-                    {isLoginPending && <div>Please wait...</div>}
-                    {isLoginSuccess && <div>Welcome back!</div>}
-                    {isLoginError && <div>{isLoginError.message}</div>}
-                </form>
-            </div>
+            // <div>
+            //     {redirectVar}
+                <div>
+                    <button name="signup" onClick={e=>this.setState({isSignupClicked: true})}><Link to="/signup">Sign Up</Link></button>
+                    <form name = "login" onSubmit={this.onSubmit}>
+                        <p>Sign in with your Grubhub account</p>
+                        <label>Email:</label><br/>
+                        <input type="email" name="email" onChange={e=>this.setState({email:e.target.value})}/><br/>
+                        <label>Password:</label><br/>
+                        <input type="password" name="password" onChange={e=>this.setState({password:e.target.value})}/><br/>
+                        <input type="submit" value="Login" />
+                        {isLoginPending && <div>Please wait...</div>}
+                        {isLoginSuccess && <div>Welcome back!</div>}
+                        {isLoginError && <div>{isLoginError.message}</div>}
+                    </form>
+                </div>
+            // </div>
         );
     }
 }
