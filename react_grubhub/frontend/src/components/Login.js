@@ -1,8 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {loginFunc} from '../redux_files/reducer/index';
-//import {Redirect} from 'react-router';
+//import {loginFunc} from '../redux_files/reducer/index';
+import {Redirect} from 'react-router';
 import {Link} from 'react-router-dom';
+//import {LOGIN_PENDING, LOGIN_SUCCESS, LOGIN_ERROR} from '../redux_files/reducer/index';
+import {setLoginError, setLoginPending, setLoginSuccess} from '../redux_files/reducer/index';
+import axios from 'axios';
+
 
 class Login extends Component {
     constructor(props) {
@@ -15,24 +19,24 @@ class Login extends Component {
     onSubmit = (e) => {
         e.preventDefault();
         let {email, password} = this.state;
+        console.log(email, password);
         this.props.loginFunc(email, password);
+        console.log("finished?");
     }
-
+    
 
     render() {
-        //let {email, password} = this.state;
-        // let redirectVar = null;
-        // console.log(this.state.isSignupClicked);
-        // if (this.state.isSignupClicked) {
-        //     redirectVar = <Redirect to= "/signup"/>
-        // }
 
         let {isLoginPending, isLoginSuccess, isLoginError} = this.props;
-
-
+        console.log(isLoginPending, isLoginSuccess, isLoginError);
+        
+        let redirectVar = null;
+        if (isLoginSuccess) {
+            redirectVar = <Redirect to= "/home"/>
+        }
         return (
-            // <div>
-            //     {redirectVar}
+            <div>
+                {redirectVar}
                 <div>
                     <button name="signup" onClick={e=>this.setState({isSignupClicked: true})}><Link to="/signup">Sign Up</Link></button>
                     <form name = "login" onSubmit={this.onSubmit}>
@@ -44,13 +48,42 @@ class Login extends Component {
                         <input type="submit" value="Login" />
                         {isLoginPending && <div>Please wait...</div>}
                         {isLoginSuccess && <div>Welcome back!</div>}
-                        {isLoginError && <div>{isLoginError.message}</div>}
+                        {isLoginError && <div>{"Invalid email or password!"}</div>}
                     </form>
                 </div>
-            // </div>
+            </div>
         );
     }
 }
+    
+
+function loginFunc(email, password) {
+    return dispatch => {
+        dispatch(setLoginPending(true));
+        dispatch(setLoginSuccess(false));
+        dispatch(setLoginError(false));
+
+        const data = {email: email, password: password};
+        console.log("data", data);
+        //set the with credentials to true
+        axios.defaults.withCredentials = true;
+        //make a post request with the user data
+        axios.post('http://localhost:3001/',data)
+            .then(response => {
+                console.log("Status Code : ",response.status);
+                if (response.status === 200) {
+                    dispatch(setLoginPending(false));
+                    dispatch(setLoginSuccess(true));
+                } 
+                else {
+                    dispatch(setLoginPending(false));
+                    dispatch(setLoginError(true));
+                }
+            })
+        };
+}
+
+
 
 const mapStateToProps = (state) => {
     return {

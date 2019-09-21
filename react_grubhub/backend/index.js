@@ -34,7 +34,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-var cusers = [];
+var cusers = [{email: "admin@gmail.com", password: "admin"}];
 
 app.post('/csignup', function(req,res){
 
@@ -48,6 +48,24 @@ app.post('/csignup', function(req,res){
 })
 
 
+app.post('/', function(req,res){
+  cusers.filter(function(user){
+    if (user.email === req.body.email && user.password === req.body.password) {
+      res.writeHead(200,{
+        'Content-Type' : 'text/plain'
+      })
+      //res.write(ans);
+      res.end("success");
+    }
+    else {
+      res.writeHead(202,{
+        'Content-Type' : 'text/plain'
+      })
+      //res.write(ans);
+      res.end("Failed");
+    }
+  });
+})
 
 
 //start your server on port 3001
