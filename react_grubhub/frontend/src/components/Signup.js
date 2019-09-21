@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
 
 class Signup extends Component {
     constructor(props) {
@@ -11,10 +12,11 @@ class Signup extends Component {
     render() {
         return (
             <div>
-                <h1>Welcommmmmmmmmm!</h1>
-                <button name="signin" onClick={this.onClick1}>Sign In</button>
-                <button name="buyer" onClick={this.onClick2}>You are a Customer</button>
-                <button name="owner" onClick={this.onClick3}>You are a restaurant Owner</button>
+                <h1>Choose which type of account you want to sign up:</h1>
+                
+                <button name="buyer"><Link to="/csignup">You Are a Customer</Link></button><br/>
+                <button name="owner"><Link to="/osignup">You Are a Restaurant Owner</Link></button><br/>
+                <button name="signin"><Link to="/">Back to Sign In</Link></button>
 
             </div>
         );
