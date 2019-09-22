@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
+import {loginFunc} from './Login';
 
 class CustomerSignup extends Component {
     constructor(props) {
@@ -12,16 +13,17 @@ class CustomerSignup extends Component {
         e.preventDefault();
         const data = this.state;
           //set the with credentials to true
-          axios.defaults.withCredentials = true;
-          //make a post request with the user data
-          axios.post('http://localhost:3001/csignup',data)
-              .then(response => {
-                  console.log("Status Code : ",response.status);
-                  //console.log("type",typeof(response.data));
-                  if(response.status === 200){
-                      console.log("sign up successfully!");
-                  }
-          });
+        axios.defaults.withCredentials = true;
+        //make a post request with the user data
+        axios.post('http://localhost:3001/csignup',data)
+            .then(response => {
+                console.log("Status Code : ",response.status);
+                //console.log("type",typeof(response.data));
+                if(response.status === 200){
+                    console.log("sign up successfully!");
+                    loginFunc(this.state.email, this.state.password);
+                }
+        });
     }
 
     render() {

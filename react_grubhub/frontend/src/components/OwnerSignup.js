@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
+import loginFunc from './Login';
 
 class CustomerSignup extends Component {
     constructor(props) {
@@ -25,6 +26,7 @@ class CustomerSignup extends Component {
     }
 
     render() {
+
         return (
                 <div>
                     <button name="backToLogin"><Link to="/">Login</Link></button>

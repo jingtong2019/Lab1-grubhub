@@ -57,7 +57,8 @@ class Login extends Component {
 }
     
 
-function loginFunc(email, password) {
+export function loginFunc(email, password) {
+    console.log("isisisiisisisi???");
     return dispatch => {
         dispatch(setLoginPending(true));
         dispatch(setLoginSuccess(false));
