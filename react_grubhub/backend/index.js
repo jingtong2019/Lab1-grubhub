@@ -45,16 +45,6 @@ var pool = mysql.createPool({
   database : 'grubhub'
 });
 
-var con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "14371437",
-  database: 'grubhub'
-});
-
-
-var ousers = [{email: "owner@gmail.com", password: "owner"}];
-
 app.post('/csignup', function(req,res){
   let sql = "INSERT INTO customers (email, password, fname, lname) VALUES ?;";
   let values = [[req.body.email, req.body.password, req.body.fname, req.body.lname]];
@@ -64,36 +54,59 @@ app.post('/csignup', function(req,res){
     console.log('connected as id ' + connection.threadId);
     connection.query(sql, [values], function(err){
         connection.release();
-        if (err) throw err;
-        res.writeHead(200,{
-          'Content-Type' : 'text/plain'
-        })
-        //res.write(ans);
-        res.end("success");
+        if (err) {
+          res.writeHead(202,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end("failed");
+        }
+        else {
+          res.writeHead(200,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end("success");
+        }
     });
+  });
 })
 
 app.post('/osignup', function(req,res){
+  let sql = "INSERT INTO owners (email, password, fname, lname, rname, zipcode) VALUES ?;";
+  let values = [[req.body.email, req.body.password, req.body.fname, req.body.lname, req.body.rname, req.body.zipcode]];
 
-  cusers.push({fname: req.body.fname, lname: req.body.lname, email: req.body.email, password: req.body.password});
-  console.log(cusers);
-  res.writeHead(200,{
-    'Content-Type' : 'text/plain'
-  })
-  //res.write(ans);
-  res.end("success");
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+    connection.query(sql, [values], function(err){
+        connection.release();
+        if (err) {
+          res.writeHead(202,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end("failed");
+        }
+        else {
+          res.writeHead(200,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end("success");
+        }
+    });
+  });
 })
 
 
 app.post('/', function(req,res){
-  let sql = "SELECT password FROM customers WHERE email = ?;";
+  let usertype = "customers";
+  if (req.body.usertype === "Restaurant Owner") {
+    usertype = "owners";
+  }
+  let sql = "SELECT password FROM " + usertype + " WHERE email = ?;";
   let values = req.body.email;
 
   pool.getConnection(function(err,connection){
     if (err) throw err;
-
     console.log('connected as id ' + connection.threadId);
-   
     connection.query(sql, [values], function(err,result){
         connection.release();
         if (err) throw err;
@@ -115,7 +128,6 @@ app.post('/', function(req,res){
           })
           res.end("Wrong password!");
         }
-          
     });
 
     // connection.on('error', function(err) {      
@@ -125,8 +137,6 @@ app.post('/', function(req,res){
   });
 
 })
-
-
 
 //start your server on port 3001
 app.listen(3001);

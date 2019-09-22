@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-//import {loginFunc} from '../redux_files/reducer/index';
 import {Redirect} from 'react-router';
 import {Link} from 'react-router-dom';
-//import {LOGIN_PENDING, LOGIN_SUCCESS, LOGIN_ERROR} from '../redux_files/reducer/index';
 import {setLoginError, setLoginPending, setLoginSuccess} from '../redux_files/reducer/index';
 import axios from 'axios';
 
@@ -18,9 +16,8 @@ class Login extends Component {
 
     onSubmit = (e) => {
         e.preventDefault();
-        let {email, password} = this.state;
-        console.log(email, password);
-        this.props.loginFunc(email, password);
+        let data = this.state;
+        this.props.loginFunc(data);
         console.log("finished?");
     }
     
@@ -38,16 +35,20 @@ class Login extends Component {
             <div>
                 {redirectVar}
                 <div>
-                    <button name="signup" onClick={e=>this.setState({isSignupClicked: true})}><Link to="/signup">Sign Up</Link></button>
+                    <button name="signup"><Link to="/signup">Sign Up</Link></button>
+                    
                     <form name = "login" onSubmit={this.onSubmit}>
                         <p>Sign in with your Grubhub account</p>
+                        <label>You are a  </label>
+                        <select onChange={e=>this.setState({usertype:e.target.value})}>
+                        <option value="Customer">Customer</option>
+                        <option value="Restaurant Owner">Restaurant Owner</option>
+                        </select><br/>
                         <label>Email:</label><br/>
                         <input type="email" name="email" onChange={e=>this.setState({email:e.target.value})}/><br/>
                         <label>Password:</label><br/>
                         <input type="password" name="password" onChange={e=>this.setState({password:e.target.value})}/><br/>
                         <input type="submit" value="Login" />
-                        {isLoginPending && <div>Please wait...</div>}
-                        {isLoginSuccess && <div>Welcome back!</div>}
                         {isLoginError && <div>{"Invalid email or password!"}</div>}
                     </form>
                 </div>
@@ -57,14 +58,13 @@ class Login extends Component {
 }
     
 
-export function loginFunc(email, password) {
+function loginFunc(data) {
     console.log("isisisiisisisi???");
     return dispatch => {
         dispatch(setLoginPending(true));
         dispatch(setLoginSuccess(false));
         dispatch(setLoginError(false));
 
-        const data = {email: email, password: password};
         console.log("data", data);
         //set the with credentials to true
         axios.defaults.withCredentials = true;
@@ -96,7 +96,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        loginFunc: (email, password) => dispatch(loginFunc(email, password))
+        loginFunc: (data) => dispatch(loginFunc(data))
     };
 }
 
