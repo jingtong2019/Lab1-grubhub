@@ -4,6 +4,7 @@ import {Redirect} from 'react-router';
 import {Link} from 'react-router-dom';
 import {setLoginError, setLoginPending, setLoginSuccess} from '../redux_files/reducer/index';
 import axios from 'axios';
+import './Login.css';
 
 
 class Login extends Component {
@@ -26,6 +27,7 @@ class Login extends Component {
 
         let {isLoginPending, isLoginSuccess, isLoginError} = this.props;
         console.log(isLoginPending, isLoginSuccess, isLoginError);
+        localStorage.setItem("authLogin", isLoginSuccess);
         
         let redirectVar = null;
         if (isLoginSuccess) {
@@ -35,22 +37,28 @@ class Login extends Component {
             <div>
                 {redirectVar}
                 <div>
-                    <button name="signup"><Link to="/signup">Sign Up</Link></button>
-                    
+                
                     <form name = "login" onSubmit={this.onSubmit}>
                         <p>Sign in with your Grubhub account</p>
-                        <label>You are a  </label>
-                        <select onChange={e=>this.setState({usertype:e.target.value})}>
+                        <label for="select"><b>You are a  </b></label>
+                        <select name="select" onChange={e=>this.setState({usertype:e.target.value})}>
                         <option value="Customer">Customer</option>
                         <option value="Restaurant Owner">Restaurant Owner</option>
-                        </select><br/>
-                        <label>Email:</label><br/>
-                        <input type="email" name="email" onChange={e=>this.setState({email:e.target.value})}/><br/>
-                        <label>Password:</label><br/>
-                        <input type="password" name="password" onChange={e=>this.setState({password:e.target.value})}/><br/>
-                        <input type="submit" value="Login" />
-                        {isLoginError && <div>{"Invalid email or password!"}</div>}
+                        </select>
+                        <div class="container">
+                            <label for="email"><b>Email</b></label><br/>
+                            <input type="email" name="email" onChange={e=>this.setState({email:e.target.value})} required/><br/>
+                            <label for="password"><b>Password</b></label><br/>
+                            <input type="password" name="password" onChange={e=>this.setState({password:e.target.value})} required/><br/>
+                            <input type="submit" value="Sign in" />
+                        </div>
+                        {isLoginError && <div className="err">{"Invalid email or password!"}</div>}
+                        
+                        <div class="container">
+                        <button name="signup" className="create"><Link to="/signup">Create your account</Link></button>
+                        </div>
                     </form>
+                    
                 </div>
             </div>
         );

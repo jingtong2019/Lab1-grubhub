@@ -1,5 +1,19 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
+import './Signup.css';
+
+import styled from 'styled-components';
+
+
+export const StyledLink = styled(Link)`
+    text-decoration: none;
+
+    &:focus, &:hover, &:visited, &:link, &:active {
+        text-decoration: none;
+    }
+    color: rgba(22, 22, 22, 0.733);
+`;
+
 
 class Signup extends Component {
     constructor(props) {
@@ -12,11 +26,11 @@ class Signup extends Component {
     render() {
         return (
             <div>
-                <h1>Choose which type of account you want to sign up:</h1>
+                <p>Choose your account type</p>
                 
-                <button name="buyer"><Link to="/csignup">You Are a Customer</Link></button><br/>
-                <button name="owner"><Link to="/osignup">You Are a Restaurant Owner</Link></button><br/>
-                <button name="signin"><Link to="/">Back to Sign In</Link></button>
+                <button name="buyer"><StyledLink to="/csignup">You Are a Customer</StyledLink></button><br/><br/>
+                <button name="owner"><StyledLink to="/osignup">You Are a Restaurant Owner</StyledLink></button><br/><br/>
+                <button name="signin"><StyledLink to="/">Back to Sign In</StyledLink></button>
 
             </div>
         );

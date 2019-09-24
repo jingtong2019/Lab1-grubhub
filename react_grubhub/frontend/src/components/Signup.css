@@ -1,0 +1,32 @@
+button {
+    width: 300px;
+    height: 60px;
+    position: relative;
+    background-color: transparent;
+    border: 2px solid rgba(58, 58, 56, 0.212);
+    border-radius: 50px;
+    font-family: 'Open Sans';
+    color: rgba(22, 22, 22, 0.733);
+    font-weight: 40;
+    font-size: 20px;
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+input[type=text] {
+    width: 15%;
+    padding: 12px 20px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+
+.back {
+    width: auto;
+    padding: 0;
+    border: none;
+    background: none;
+    font-size: 14px;
+  }

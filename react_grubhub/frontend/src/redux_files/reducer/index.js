@@ -1,6 +1,14 @@
 export const LOGIN_PENDING = 'LOGIN_PENDING';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_ERROR = 'LOGIN_ERROR';
+export const SIGNUP_ERROR = 'SIGNUP_ERROR';
+
+export function setSignupError(isSignupError) {
+    return {
+        type: SIGNUP_ERROR,
+        isSignupError
+    };
+}
 
 export function setLoginPending(isLoginPending) {
     return {
@@ -44,7 +52,8 @@ export function setLoginError(isLoginError) {
 export default function reducer(state = {
     isLoginPending: false,
     isLoginSuccess: false,
-    isLoginError: null
+    isLoginError: null,
+    isSignupError: null
 }, action) {
     switch (action.type) {
         case LOGIN_PENDING:
@@ -62,6 +71,11 @@ export default function reducer(state = {
                 ...state,
                 isLoginError: action.isLoginError
             };
+        case SIGNUP_ERROR:
+            return {
+                ...state,
+                isSignupError: action.isSignupError
+            }
         default: return state;
     }
 }

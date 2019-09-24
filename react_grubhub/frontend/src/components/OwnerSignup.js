@@ -2,13 +2,15 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import {Redirect} from 'react-router';
-import {setLoginError, setLoginPending, setLoginSuccess} from '../redux_files/reducer/index';
+import {setLoginError, setLoginPending, setLoginSuccess, setSignupError} from '../redux_files/reducer/index';
 import {connect} from 'react-redux';
+import './Signup.css';
 
 class OwnerSignup extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+        };
     }
 
     onSubmit = (e) => {
@@ -18,8 +20,8 @@ class OwnerSignup extends Component {
     }
 
     render() {
-        let {isLoginPending, isLoginSuccess, isLoginError} = this.props;
-        console.log(isLoginPending, isLoginSuccess, isLoginError);
+        let {isLoginPending, isLoginSuccess, isLoginError, isSignupError} = this.props;
+        console.log(isLoginPending, isLoginSuccess, isSignupError);
         
         let redirectVar = null;
         if (isLoginSuccess) {
@@ -29,22 +31,27 @@ class OwnerSignup extends Component {
             <div>
                 {redirectVar}
                 <div>
-                    <button name="backToLogin"><Link to="/">Login</Link></button>
+                    
                     <form name = "customersignup" onSubmit={this.onSubmit}>
-                        <p>Create your Grubhub customer account</p>
-                        <label>First name:</label><br/>
-                        <input type="text" name="fname" onChange={e=>this.setState({fname:e.target.value})}/><br/>
-                        <label>Last name:</label><br/>
-                        <input type="text" name="lname" onChange={e=>this.setState({lname:e.target.value})}/><br/>
-                        <label>Email:</label><br/>
-                        <input type="email" name="email" onChange={e=>this.setState({email:e.target.value})}/><br/>
-                        <label>Password:</label><br/>
-                        <input type="password" name="password" onChange={e=>this.setState({password:e.target.value})}/><br/>
-                        <label>Restaurant Name:</label><br/>
-                        <input type="text" name="restaurantName" onChange={e=>this.setState({rname:e.target.value})}/><br/>
-                        <label>Restaurant Zipcode:</label><br/>
-                        <input type="text" name="zipcode" onChange={e=>this.setState({zipcode:e.target.value})}/><br/>
-                        <input type="submit" value="Sign up" />
+                        <p>Create your Grubhub owner account</p>
+                        <input type="text" name="fname" placeholder="First name" onChange={e=>this.setState({fname:e.target.value})}/>
+                        
+                        <input type="text" name="lname" placeholder="Last name" onChange={e=>this.setState({lname:e.target.value})}/><br/>
+                        
+                        <input type="email" name="email" placeholder="Email" onChange={e=>this.setState({email:e.target.value})}/><br/>
+                        
+                        <input type="password" name="password" placeholder="Password" onChange={e=>this.setState({password:e.target.value})}/><br/>
+                        
+                        <input type="text" name="restaurantName" placeholder="Restaurant name" onChange={e=>this.setState({rname:e.target.value})}/>
+                        
+                        <input type="text" name="zipcode" placeholder="Zipcode" onChange={e=>this.setState({zipcode:e.target.value})}/><br/>
+                        <input type="submit" value="Sign up" /><br/>
+                        
+
+                        {isSignupError && <div>{"This email address has been used!"}</div>}
+                        <br/>
+                        <button className="back" name="backToLogin"><Link to="/">Back to login</Link></button>
+
                     </form>
                 </div>
             </div>
@@ -58,6 +65,7 @@ function osignupToHome(data) {
         dispatch(setLoginPending(true));
         dispatch(setLoginSuccess(false));
         dispatch(setLoginError(false));
+        dispatch(setSignupError(false));
 
         axios.defaults.withCredentials = true;
         //make a post request with the user data
@@ -73,6 +81,7 @@ function osignupToHome(data) {
                 else {
                     dispatch(setLoginPending(false));
                     dispatch(setLoginError(true));
+                    dispatch(setSignupError(true));
                 }
         })
     };
@@ -83,7 +92,8 @@ const mapStateToProps = (state) => {
     return {
         isLoginPending: state.isLoginPending,
         isLoginSuccess: state.isLoginSuccess,
-        isLoginError: state.isLoginError
+        isLoginError: state.isLoginError,
+        isSignupError: state.isSignupError
     };
 }
 

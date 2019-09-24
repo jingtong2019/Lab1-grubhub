@@ -3,24 +3,34 @@ import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
 import {setLoginError, setLoginPending, setLoginSuccess} from '../redux_files/reducer/index';
+import store from '../redux_files/store/index'
+//import { Provider } from 'react-redux';
 
 class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {};
+        //console.log("construct this.state: ", this.state);
     }
 
     onClick = (e) => {
         e.preventDefault();
         this.props.logout();
+        localStorage.setItem("authLogin", "false");
     }
 
     render() {
-        let {isLoginPending, isLoginSuccess, isLoginError} = this.props;
-        console.log(isLoginPending, isLoginSuccess, isLoginError);
+        //let {isLoginPending, isLoginSuccess, isLoginError} = this.props;
+        let flag = localStorage.getItem("authLogin");
+        console.log("local storage:", typeof(flag), !flag);
+        //console.log("this.state: ", this.state);
+        console.log("state done!");
+        //let {isLoginPending, isLoginSuccess, isLoginError} = store.getState();
+        //console.log(isLoginPending, isLoginSuccess, isLoginError);
         
         let redirectVar = null;
-        if (!isLoginSuccess) {
+        if (flag === "false") {
+            console.log("!flag:", !flag);
             redirectVar = <Redirect to= "/"/>
         }
         return (

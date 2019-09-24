@@ -2,8 +2,9 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import {Redirect} from 'react-router';
-import {setLoginError, setLoginPending, setLoginSuccess} from '../redux_files/reducer/index';
+import {setLoginError, setLoginPending, setLoginSuccess, setSignupError} from '../redux_files/reducer/index';
 import {connect} from 'react-redux';
+import './Signup.css';
 
 class CustomerSignup extends Component {
     constructor(props) {
@@ -18,8 +19,9 @@ class CustomerSignup extends Component {
     }
 
     render() {
-        let {isLoginPending, isLoginSuccess, isLoginError} = this.props;
-        console.log(isLoginPending, isLoginSuccess, isLoginError);
+        console.log("this.props", this.props);
+        let {isLoginPending, isLoginSuccess, isLoginError, isSignupError} = this.props;
+        console.log(isLoginPending, isLoginSuccess, isSignupError);
         
         let redirectVar = null;
         if (isLoginSuccess) {
@@ -29,21 +31,21 @@ class CustomerSignup extends Component {
             <div>
                 {redirectVar}
                 <div>
-                    <button name="backToLogin"><Link to="/">Login</Link></button>
+                    
                     <form name = "customersignup" onSubmit={this.onSubmit}>
                         <p>Create your Grubhub customer account</p>
-                        <label>First name:</label><br/>
-                        <input type="text" name="fname" onChange={e=>this.setState({fname:e.target.value})}/><br/>
-                        <label>Last name:</label><br/>
-                        <input type="text" name="lname" onChange={e=>this.setState({lname:e.target.value})}/><br/>
-                        <label>Email:</label><br/>
-                        <input type="email" name="email" onChange={e=>this.setState({email:e.target.value})}/><br/>
-                        <label>Password:</label><br/>
-                        <input type="password" name="password" onChange={e=>this.setState({password:e.target.value})}/><br/>
+                        
+                        <input type="text" name="fname" placeholder="First name" onChange={e=>this.setState({fname:e.target.value})} required/>
+                        
+                        <input type="text" name="lname" placeholder="Last name" onChange={e=>this.setState({lname:e.target.value})} required/><br/>
+                        
+                        <input type="email" name="email" placeholder="Email" onChange={e=>this.setState({email:e.target.value})} required/><br/>
+                        
+                        <input type="password" name="password" placeholder="Password" onChange={e=>this.setState({password:e.target.value})} required/><br/>
                         <input type="submit" value="Sign up" />
-                        {isLoginPending && <div>Please wait...</div>}
-                        {isLoginSuccess && <div>Welcome back!</div>}
-                        {isLoginError && <div>{"This email address has been used!"}</div>}
+                        {isSignupError && <div>{"This email address has been used!"}</div>}
+                        <br/>
+                        <button className="back" name="backToLogin"><Link to="/">Back to login</Link></button>
                     </form>
                 </div>
             </div>
@@ -57,6 +59,7 @@ function csignupToHome(data) {
         dispatch(setLoginPending(true));
         dispatch(setLoginSuccess(false));
         dispatch(setLoginError(false));
+        dispatch(setSignupError(false));
 
         axios.defaults.withCredentials = true;
         //make a post request with the user data
@@ -72,6 +75,7 @@ function csignupToHome(data) {
                 else {
                     dispatch(setLoginPending(false));
                     dispatch(setLoginError(true));
+                    dispatch(setSignupError(true));
                 }
         })
     };
@@ -82,7 +86,8 @@ const mapStateToProps = (state) => {
     return {
         isLoginPending: state.isLoginPending,
         isLoginSuccess: state.isLoginSuccess,
-        isLoginError: state.isLoginError
+        isLoginError: state.isLoginError,
+        isSignupError: state.isSignupError
     };
 }
 
