@@ -96,6 +96,50 @@ app.post('/osignup', function(req,res){
 })
 
 
+app.post('/osignup2', function(req,res){
+  let get_id = "SELECT oid FROM owners WHERE email = ?;";
+  let email_values = req.body.email;
+  
+
+  let id_res;
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+    connection.query(get_id, [email_values], function(err, result){
+        //connection.release();
+        if (err) {
+          console.log("cant find oid");
+        }
+        else {
+          id_res = result[0].oid;
+          console.log(typeof(id_res), id_res);
+        }
+    });
+
+    setTimeout( function(){
+      let sql = "INSERT INTO restaurants (oid, rname, address, phone) VALUES ?;";
+      let values = [[id_res, req.body.rname, req.body.address, req.body.phone]];
+      connection.query(sql, [values], function(err){
+        connection.release();
+        if (err) throw err;
+        if (err) {
+          res.writeHead(202,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end("failed");
+        }
+        else {
+          res.writeHead(200,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end("success");
+        }
+      });
+    }, 200 );
+    
+  });
+})
+
 app.post('/', function(req,res){
   let usertype = "customers";
   if (req.body.usertype === "Restaurant Owner") {

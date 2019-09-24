@@ -36,27 +36,27 @@ class Login extends Component {
         return (
             <div>
                 {redirectVar}
-                <div>
+                <div class="container">
                 
                     <form name = "login" onSubmit={this.onSubmit}>
-                        <p>Sign in with your Grubhub account</p>
-                        <label for="select"><b>You are a  </b></label>
-                        <select name="select" onChange={e=>this.setState({usertype:e.target.value})}>
+                        <p className="bigtitle">Sign in with your Grubhub account</p>
+                        <label for="select"><b>You are a</b></label>
+                        <select className="login_select" name="select" onChange={e=>this.setState({usertype:e.target.value})}>
                         <option value="Customer">Customer</option>
                         <option value="Restaurant Owner">Restaurant Owner</option>
-                        </select>
-                        <div class="container">
-                            <label for="email"><b>Email</b></label><br/>
-                            <input type="email" name="email" onChange={e=>this.setState({email:e.target.value})} required/><br/>
-                            <label for="password"><b>Password</b></label><br/>
-                            <input type="password" name="password" onChange={e=>this.setState({password:e.target.value})} required/><br/>
-                            <input type="submit" value="Sign in" />
-                        </div>
+                        </select><br/>
+                            
+                        <label className="box_label"><b>Email</b></label><br/>
+                        <input className="box_input" type="email" name="email" onChange={e=>this.setState({email:e.target.value})} required/><br/><br/>
+                        <label className="box_label" for="password"><b>Password</b></label><br/>
+                        <input className="box_input" type="password" name="password" onChange={e=>this.setState({password:e.target.value})} required/><br/>
+                        <input className="submit_button" type="submit" value="Sign in" />
+                            
                         {isLoginError && <div className="err">{"Invalid email or password!"}</div>}
                         
-                        <div class="container">
+                        <br/>
                         <button name="signup" className="create"><Link to="/signup">Create your account</Link></button>
-                        </div>
+                        
                     </form>
                     
                 </div>

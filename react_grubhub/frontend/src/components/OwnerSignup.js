@@ -20,32 +20,35 @@ class OwnerSignup extends Component {
     }
 
     render() {
-        let {isLoginPending, isLoginSuccess, isLoginError, isSignupError} = this.props;
+        let {isLoginPending, isLoginSuccess, isSignupError} = this.props;
         console.log(isLoginPending, isLoginSuccess, isSignupError);
         
         let redirectVar = null;
         if (isLoginSuccess) {
-            redirectVar = <Redirect to= "/home"/>
+            redirectVar = <Redirect to= "/osignup2"/>
+            localStorage.setItem("email", this.state.email);
+            localStorage.setItem("usertype", "owner");
+            localStorage.setItem("rname", this.state.rname);
         }
         return (
             <div>
                 {redirectVar}
-                <div>
+                <div className="container">
                     
-                    <form name = "customersignup" onSubmit={this.onSubmit}>
-                        <p>Create your Grubhub owner account</p>
-                        <input type="text" name="fname" placeholder="First name" onChange={e=>this.setState({fname:e.target.value})}/>
+                    <form name = "ownersignup" onSubmit={this.onSubmit}>
+                        <p className="bigtitle">Create your Grubhub owner account</p>
+                        <input className="boxes" type="text" name="fname" placeholder="First name" onChange={e=>this.setState({fname:e.target.value})}/>
                         
-                        <input type="text" name="lname" placeholder="Last name" onChange={e=>this.setState({lname:e.target.value})}/><br/>
+                        <input className="boxes" type="text" name="lname" placeholder="Last name" onChange={e=>this.setState({lname:e.target.value})}/><br/>
+                        <br/>
+                        <input className="box_input" type="email" name="email" placeholder="Email" onChange={e=>this.setState({email:e.target.value})}/><br/>
+                        <br/>
+                        <input className="box_input" type="password" name="password" placeholder="Password" onChange={e=>this.setState({password:e.target.value})}/><br/>
+                        <br/>
+                        <input className="boxes" type="text" name="restaurantName" placeholder="Restaurant name" onChange={e=>this.setState({rname:e.target.value})}/>
                         
-                        <input type="email" name="email" placeholder="Email" onChange={e=>this.setState({email:e.target.value})}/><br/>
-                        
-                        <input type="password" name="password" placeholder="Password" onChange={e=>this.setState({password:e.target.value})}/><br/>
-                        
-                        <input type="text" name="restaurantName" placeholder="Restaurant name" onChange={e=>this.setState({rname:e.target.value})}/>
-                        
-                        <input type="text" name="zipcode" placeholder="Zipcode" onChange={e=>this.setState({zipcode:e.target.value})}/><br/>
-                        <input type="submit" value="Sign up" /><br/>
+                        <input className="boxes" type="text" name="zipcode" placeholder="Zipcode" onChange={e=>this.setState({zipcode:e.target.value})}/><br/>
+                        <input className="submit_button" type="submit" value="Sign up" /><br/>
                         
 
                         {isSignupError && <div>{"This email address has been used!"}</div>}
@@ -79,6 +82,7 @@ function osignupToHome(data) {
                     dispatch(setLoginSuccess(true));
                 }
                 else {
+                    console.log("wrong???");
                     dispatch(setLoginPending(false));
                     dispatch(setLoginError(true));
                     dispatch(setSignupError(true));

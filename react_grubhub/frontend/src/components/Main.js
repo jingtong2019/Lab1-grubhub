@@ -4,7 +4,9 @@ import Login from './Login';
 import Signup from './Signup';
 import CustomerSignup from './CustomerSignup';
 import OwnerSignup from './OwnerSignup';
+import OwnerSignup2 from './OwnerSignup2';
 import Home from './Home';
+
 // import Landing from './Landing';
 
 //Create a Main Component
@@ -19,6 +21,7 @@ class Main extends Component {
                 <Route path="/home" component={Home}/>
                 <Route path="/csignup" component={CustomerSignup}/>
                 <Route path="/osignup" component={OwnerSignup}/>
+                <Route path="/osignup2" component={OwnerSignup2}/>
             </div>
         );
     }

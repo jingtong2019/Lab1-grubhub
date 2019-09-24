@@ -30,19 +30,19 @@ class CustomerSignup extends Component {
         return (
             <div>
                 {redirectVar}
-                <div>
+                <div className="container">
                     
                     <form name = "customersignup" onSubmit={this.onSubmit}>
-                        <p>Create your Grubhub customer account</p>
+                        <p className="bigtitle">Create your Grubhub customer account</p>
                         
-                        <input type="text" name="fname" placeholder="First name" onChange={e=>this.setState({fname:e.target.value})} required/>
+                        <input className="boxes" type="text" name="fname" placeholder="First name" onChange={e=>this.setState({fname:e.target.value})} required/>
                         
-                        <input type="text" name="lname" placeholder="Last name" onChange={e=>this.setState({lname:e.target.value})} required/><br/>
-                        
-                        <input type="email" name="email" placeholder="Email" onChange={e=>this.setState({email:e.target.value})} required/><br/>
-                        
-                        <input type="password" name="password" placeholder="Password" onChange={e=>this.setState({password:e.target.value})} required/><br/>
-                        <input type="submit" value="Sign up" />
+                        <input className="boxes" type="text" name="lname" placeholder="Last name" onChange={e=>this.setState({lname:e.target.value})} required/><br/>
+                        <br/>
+                        <input className="box_input" type="email" name="email" placeholder="Email" onChange={e=>this.setState({email:e.target.value})} required/><br/>
+                        <br/>
+                        <input className="box_input" type="password" name="password" placeholder="Password" onChange={e=>this.setState({password:e.target.value})} required/><br/>
+                        <input className="submit_button" type="submit" value="Sign up" />
                         {isSignupError && <div>{"This email address has been used!"}</div>}
                         <br/>
                         <button className="back" name="backToLogin"><Link to="/">Back to login</Link></button>
@@ -63,7 +63,7 @@ function csignupToHome(data) {
 
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post('http://localhost:3001/csignup',data)
+        axios.post('http://localhost:3001/osignup2',data)
             .then(response => {
                 console.log("Status Code : ",response.status);
                 //console.log("type",typeof(response.data));
