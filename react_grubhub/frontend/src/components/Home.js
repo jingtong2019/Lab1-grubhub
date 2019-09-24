@@ -22,14 +22,14 @@ class Home extends Component {
     render() {
         //let {isLoginPending, isLoginSuccess, isLoginError} = this.props;
         let flag = localStorage.getItem("authLogin");
-        console.log("local storage:", typeof(flag), !flag);
+        console.log("local storage:", typeof(flag), flag);
         //console.log("this.state: ", this.state);
         console.log("state done!");
         //let {isLoginPending, isLoginSuccess, isLoginError} = store.getState();
         //console.log(isLoginPending, isLoginSuccess, isLoginError);
         
         let redirectVar = null;
-        if (flag === "false") {
+        if (flag !== "true") {
             console.log("!flag:", !flag);
             redirectVar = <Redirect to= "/"/>
         }

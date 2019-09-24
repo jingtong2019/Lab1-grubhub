@@ -6,6 +6,7 @@ import CustomerSignup from './CustomerSignup';
 import OwnerSignup from './OwnerSignup';
 import OwnerSignup2 from './OwnerSignup2';
 import Home from './Home';
+import Navbar from './Navbar'
 
 // import Landing from './Landing';
 
@@ -15,7 +16,7 @@ class Main extends Component {
         return(
             <div>
                 {/*Render Different Component based on Route*/}
-                {/* <Route path="/index" component={Landing}/> */}
+                <Route path="/" component={Navbar}/>
                 <Route exact path="/" component={Login}/>
                 <Route path="/signup" component={Signup}/>
                 <Route path="/home" component={Home}/>
