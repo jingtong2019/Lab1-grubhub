@@ -45,6 +45,35 @@ var pool = mysql.createPool({
   database : 'grubhub'
 });
 
+app.post('/account', function(req,res){
+
+  console.log("req:", req.body);
+  let sql = "INSERT INTO customers (email, password, fname, lname) VALUES ?;";
+  let values = [[req.body.email, req.body.password, req.body.fname, req.body.lname]];
+
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+    connection.query(sql, [values], function(err){
+        connection.release();
+        if (err) {
+          res.writeHead(202,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end("failed");
+        }
+        else {
+          res.writeHead(200,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end("success");
+        }
+    });
+  });
+})
+
+
+
 app.post('/csignup', function(req,res){
   let sql = "INSERT INTO customers (email, password, fname, lname) VALUES ?;";
   let values = [[req.body.email, req.body.password, req.body.fname, req.body.lname]];
@@ -142,10 +171,12 @@ app.post('/osignup2', function(req,res){
 
 app.post('/', function(req,res){
   let usertype = "customers";
+  let idtype = "cid";
   if (req.body.usertype === "Restaurant Owner") {
     usertype = "owners";
+    idtype = "oid";
   }
-  let sql = "SELECT password FROM " + usertype + " WHERE email = ?;";
+  let sql = "SELECT " + idtype + ", password FROM " + usertype + " WHERE email = ?;";
   let values = req.body.email;
 
   pool.getConnection(function(err,connection){
@@ -164,7 +195,8 @@ app.post('/', function(req,res){
           res.writeHead(200,{
             'Content-Type' : 'text/plain'
           })
-          res.end("success");
+          if (idtype == "cid") res.end((result[0].cid).toString());
+          else res.end((result[0].oid).toString());
         }
         else {
           res.writeHead(203,{

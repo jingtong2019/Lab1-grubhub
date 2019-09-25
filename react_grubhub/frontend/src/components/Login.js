@@ -31,6 +31,7 @@ class Login extends Component {
         
         let redirectVar = null;
         if (isLoginSuccess) {
+            localStorage.setItem("usertype", this.state.usertype);
             redirectVar = <Redirect to= "/home"/>
         }
         return (
@@ -83,6 +84,8 @@ function loginFunc(data) {
                 if (response.status === 200) {
                     dispatch(setLoginPending(false));
                     dispatch(setLoginSuccess(true));
+                    console.log("response:", response.data);
+                    localStorage.setItem("userid", response.data);
                 } 
                 else {
                     dispatch(setLoginPending(false));

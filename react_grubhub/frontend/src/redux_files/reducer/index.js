@@ -31,23 +31,6 @@ export function setLoginError(isLoginError) {
     };
 }
 
-// export function loginFunc(email, password) {
-//     return dispatch => {
-//         dispatch(setLoginPending(true));
-//         dispatch(setLoginSuccess(false));
-//         dispatch(setLoginError(null));
-
-//         sendLoginRequest(email, password)
-//             .then(success => {
-//                 dispatch(setLoginPending(false));
-//                 dispatch(setLoginSuccess(true));
-//             })
-//             .catch(err => {
-//                 dispatch(setLoginPending(false));
-//                 dispatch(setLoginError(err));
-//             });
-//     };
-// }
 
 export default function reducer(state = {
     isLoginPending: false,
@@ -79,14 +62,3 @@ export default function reducer(state = {
         default: return state;
     }
 }
-
-// function sendLoginRequest(email, password) {
-//     return new Promise((resolve, reject) => {
-//         if (email === "admin@gmail.com" && password === "admin") {
-//             return resolve(true);
-//         }
-//         else {
-//             return reject(new Error('Invalid email or password'));
-//         }
-//     });
-// }

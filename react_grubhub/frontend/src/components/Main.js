@@ -7,6 +7,7 @@ import OwnerSignup from './OwnerSignup';
 import OwnerSignup2 from './OwnerSignup2';
 import Home from './Home';
 import Navbar from './Navbar'
+import Account from './Account';
 
 // import Landing from './Landing';
 
@@ -20,6 +21,7 @@ class Main extends Component {
                 <Route exact path="/" component={Login}/>
                 <Route path="/signup" component={Signup}/>
                 <Route path="/home" component={Home}/>
+                <Route path="/account" component={Account}/>
                 <Route path="/csignup" component={CustomerSignup}/>
                 <Route path="/osignup" component={OwnerSignup}/>
                 <Route path="/osignup2" component={OwnerSignup2}/>

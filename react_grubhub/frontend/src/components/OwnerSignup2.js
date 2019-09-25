@@ -43,15 +43,15 @@ class OwnerSignup2 extends Component {
         return (
             <div>
                 {redirectVar}
-                <div>
+                <div className="container2">
                 
                     <form name = "ownersignup2" onSubmit={this.onSubmit}>
-                        <div className="part1">
+                        {/* <div className="part1"> */}
                         <p className = "bigtitle">Congrats on getting started with Grubhub!</p>
-                        <p className="small">In just four steps, you'll be on your way to growing your business.</p>
-                        </div>
+                        {/* <p className="small">In just four steps, you'll be on your way to growing your business.</p> */}
+                        {/* </div> */}
 
-                        <div className="part2">
+                        {/* <div className="part2"> */}
                         <label><b>How many locations are you signing up?</b></label><br/><br/>
                         <select className="select" onChange={e=>this.setState({locations:e.target.value})}>
                         <option value="1">1</option>
@@ -61,17 +61,17 @@ class OwnerSignup2 extends Component {
                         <br/><br/>
                     
                         <label><b>Restaurant information</b></label><br/><br/>
-                        <label className="box_label">Restaurant name</label>
+                        <label className="box_label">Restaurant name</label><br/>
                         <input className="box_input" type="text" name="rname" value={localStorage.getItem("rname")} onChange={e=>this.setState({rname:e.target.value})} required/><br/>
                         <br/>
-                        <label className="box_label">Restaurant address</label>
+                        <label className="box_label">Restaurant address</label><br/>
                         <input className="box_input" type="text" name="address" onChange={e=>this.setState({address:e.target.value})} required/><br/>
                         <br/>
                         <label className="box_label">Restaurant phone number</label><br/>
                         <input className="boxes" type="text" name="phone" onChange={e=>this.setState({phone:e.target.value})} required/>
                         <br/>
                         
-                        </div>
+                        {/* </div> */}
                         <div className="part3">
                         <input className="save_button" type="submit" value="Save and continue" /><br/>
                         </div>

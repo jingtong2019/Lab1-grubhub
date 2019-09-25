@@ -38,7 +38,7 @@ class Navbar extends Component {
                     </div>
                     {flag === "true" && <div className="topnav-right">
                     <ul class="nav navbar-nav">
-                    
+                    <li><Link to="/account">Account</Link></li>
                     <li class="nav-item"><a href="#">Cart</a></li>
                     <li onClick={this.onClick}><Link to="/">Logout</Link></li>
                     </ul>
