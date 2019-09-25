@@ -1,13 +1,22 @@
 import React,{Component} from 'react';
 import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
+import {setLoginError, setLoginPending, setLoginSuccess} from '../redux_files/reducer/index';
 import './Navbar.css';
 
 //create the Navbar Component
 class Navbar extends Component {
     constructor(props){
         super(props);
+        this.state = {};
         //this.handleLogout = this.handleLogout.bind(this);
+    }
+
+    onClick = (e) => {
+        e.preventDefault();
+        this.props.logout();
+        localStorage.setItem("authLogin", "false");
     }
     
     render(){
@@ -31,6 +40,7 @@ class Navbar extends Component {
                     <ul class="nav navbar-nav">
                     
                     <li class="nav-item"><a href="#">Cart</a></li>
+                    <li onClick={this.onClick}><Link to="/">Logout</Link></li>
                     </ul>
                     </div>}
                 </div>
@@ -40,4 +50,27 @@ class Navbar extends Component {
     }
 }
 
-export default Navbar;
+
+function logout() {
+    return dispatch => {
+        dispatch(setLoginPending(true));
+        dispatch(setLoginSuccess(false));
+        dispatch(setLoginError(false));
+    }
+}
+
+const mapStateToProps = (state) => {
+    return {
+        isLoginPending: state.isLoginPending,
+        isLoginSuccess: state.isLoginSuccess,
+        isLoginError: state.isLoginError
+    };
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        logout: () => dispatch(logout())
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

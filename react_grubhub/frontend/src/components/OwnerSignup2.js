@@ -37,6 +37,7 @@ class OwnerSignup2 extends Component {
 
         let redirectVar = null;
         if (this.state.flag) {
+            localStorage.setItem("authLogin", "true");
             redirectVar = <Redirect to= "/home"/>
         }
         return (
