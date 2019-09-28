@@ -6,6 +6,8 @@ CREATE TABLE customers
   password varchar(255) NOT NULL, 
   fname varchar(255) NOT NULL, 
   lname varchar(255) NOT NULL,
+  phone varchar(255) DEFAULT "",
+  profile_image MEDIUMBLOB,
   PRIMARY KEY (cid)
 );
 

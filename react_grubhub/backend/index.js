@@ -1,12 +1,25 @@
 //import the require dependencies
 var express = require('express');
-var app = express();
+
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var cors = require('cors');
-app.set('view engine', 'ejs');
+var path = require('path');
+var multer = require('multer');
 
+var app = express();
+var storage = multer.diskStorage({
+  destination: './public/uploads/',
+  filename: function(req, file, cb){
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage });
+
+app.set('view engine', 'ejs');
+app.use(express.static('./public'));
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
@@ -34,7 +47,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-
+var fs = require("fs");
 var mysql = require('mysql');
 
 var pool = mysql.createPool({
@@ -45,16 +58,75 @@ var pool = mysql.createPool({
   database : 'grubhub'
 });
 
-app.post('/account', function(req,res){
-
-  console.log("req:", req.body);
-  let sql = "INSERT INTO customers (email, password, fname, lname) VALUES ?;";
-  let values = [[req.body.email, req.body.password, req.body.fname, req.body.lname]];
-
+app.post('/account3', upload.single('myImage'), (req, res) => {
+  console.log("req.file::", req.file.path);
+  let sql = "UPDATE customers SET profile_image = ?;";
+  let values = fs.readFileSync(req.file.path);
   pool.getConnection(function(err,connection){
     if (err) throw err;
     console.log('connected as id ' + connection.threadId);
-    connection.query(sql, [values], function(err){
+    connection.query(sql, values, function(err, result){
+        connection.release();
+        if (err) {
+          res.writeHead(202,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end("image too large");
+        }
+        else {
+          fs.unlinkSync(req.file.path);
+          res.writeHead(200,{
+            'Content-Type' : 'application/json'
+          })
+          res.end("success");
+        }
+    });
+  });
+});
+
+
+
+app.post('/account1', function(req,res){
+  console.log("req.body.userid", req.body.userid);
+  let sql = "SELECT fname, lname, email, phone, profile_image FROM customers WHERE cid = " + req.body.userid + ";";
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+    connection.query(sql, function(err, result){
+        connection.release();
+        if (err) {
+          res.writeHead(202,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end("failed");
+        }
+        else {
+          // res.writeHead(200,{
+          //   'Content-Type' : 'image/png'
+          // })
+          // const buf = new Buffer.from(result[0].profile_image, "binary");
+          // res.end(buf.toString('base64'));
+          res.writeHead(200,{
+               'Content-Type' : 'application/json'
+          })
+          const buf = new Buffer.from(result[0].profile_image, "binary");
+          let info = {
+            ...result[0],
+            image_result: buf.toString('base64')
+          }
+          res.end(JSON.stringify(info));
+        }
+    });
+  });
+})
+
+app.post('/account2', function(req,res){
+  let sql = "UPDATE customers SET fname = ?, lname = ?, email = ?, phone = ? WHERE cid = ?;";
+  let values = [req.body.fname, req.body.lname, req.body.email, req.body.phone, req.body.userid];
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+    connection.query(sql, values, function(err, result){
         connection.release();
         if (err) {
           res.writeHead(202,{
@@ -73,8 +145,8 @@ app.post('/account', function(req,res){
 })
 
 
-
 app.post('/csignup', function(req,res){
+  //let sql = "INSERT INTO customers (email, password, fname, lname) VALUES ?; SELECT cid FROM customers WHERE email = " + req.body.email + ";";
   let sql = "INSERT INTO customers (email, password, fname, lname) VALUES ?;";
   let values = [[req.body.email, req.body.password, req.body.fname, req.body.lname]];
 
@@ -82,18 +154,30 @@ app.post('/csignup', function(req,res){
     if (err) throw err;
     console.log('connected as id ' + connection.threadId);
     connection.query(sql, [values], function(err){
-        connection.release();
         if (err) {
+          connection.release();
           res.writeHead(202,{
             'Content-Type' : 'text/plain'
           })
           res.end("failed");
         }
         else {
-          res.writeHead(200,{
-            'Content-Type' : 'text/plain'
-          })
-          res.end("success");
+          let sql2 = "SELECT cid FROM customers WHERE email = \"" + req.body.email + "\";";
+          connection.query(sql2, function(err, result){
+            connection.release();
+            if (err) {
+              res.writeHead(202,{
+                'Content-Type' : 'text/plain'
+              })
+              res.end("failed");
+            }
+            else {
+              res.writeHead(200,{
+                'Content-Type' : 'text/plain'
+              })
+              res.end((result[0].cid).toString());
+            }
+          });
         }
     });
   });

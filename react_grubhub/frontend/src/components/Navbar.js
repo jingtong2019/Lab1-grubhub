@@ -21,7 +21,7 @@ class Navbar extends Component {
     
     render(){
         let flag = localStorage.getItem("authLogin");
-        console.log("navbar:", typeof(flag), flag);
+        //console.log("navbar:", typeof(flag), flag);
         return(
             <div>
             <head>
