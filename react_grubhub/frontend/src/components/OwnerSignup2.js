@@ -29,6 +29,8 @@ class OwnerSignup2 extends Component {
                 if(response.status === 200){
                     console.log("sign up successfully!");
                     this.setState({flag:true})
+                    console.log("userid", response.data);
+                    localStorage.setItem("userid", response.data);
                 }
         })
     }
@@ -38,7 +40,8 @@ class OwnerSignup2 extends Component {
         let redirectVar = null;
         if (this.state.flag) {
             localStorage.setItem("authLogin", "true");
-            redirectVar = <Redirect to= "/home"/>
+            redirectVar = <Redirect to= "/ohome"/>
+            //localStorage.setItem("usertype", "owner");
         }
         return (
             <div>

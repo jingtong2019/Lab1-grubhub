@@ -58,6 +58,99 @@ var pool = mysql.createPool({
   database : 'grubhub'
 });
 
+
+
+app.post('/ohome', function(req,res){
+  console.log("req.body.userid", req.body.userid);
+  let rid;
+  let sql1 = "SELECT rid FROM restaurants WHERE oid = " + req.body.userid.toString() + ";";
+  
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+    connection.query(sql1, function(err, result){
+        //connection.release();
+        if (err) {
+          res.writeHead(202,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end("failed");
+        }
+        else {
+          rid = result[0].rid;
+          let sql2 = "SELECT order_id, cid, status, items, cname, caddress FROM orders WHERE rid = " + rid.toString() + ";";
+          connection.query(sql2, function(err, info){
+            connection.release();
+            if (err) {
+              res.writeHead(202,{
+                'Content-Type' : 'text/plain'
+              })
+              res.end("failed");
+            }
+            else {
+                  res.writeHead(200,{
+                    'Content-Type' : 'application/json'
+              })
+              
+              res.end(JSON.stringify(info));
+            }
+          });
+        }
+    });
+  });
+})
+
+app.post('/ohomeChange', function(req,res){
+  console.log("req.body.userid", req.body.userid);
+  let sql = "UPDATE orders SET status = \"" + req.body.new_status + "\" WHERE order_id = " + req.body.order_id + ";";
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+    connection.query(sql, function(err){
+        connection.release();
+        //if (err) throw err;
+        if (err) {
+          res.writeHead(202,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end("failed");
+        }
+        else {
+          res.writeHead(200,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end("success");
+        }
+    });
+  });
+})
+
+app.post('/ohomeCancel', function(req,res){
+  console.log("req.body.userid", req.body.userid);
+  let sql = "DELETE FROM orders WHERE order_id = " + req.body.order_id + ";";
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+    connection.query(sql, function(err){
+        connection.release();
+        //if (err) throw err;
+        if (err) {
+          res.writeHead(202,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end("failed");
+        }
+        else {
+          res.writeHead(200,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end("success");
+        }
+    });
+  });
+})
+
+
 app.post('/account3', upload.single('myImage'), (req, res) => {
   console.log("req.file::", req.file.path);
   let sql = "UPDATE customers SET profile_image = ?;";
@@ -213,7 +306,6 @@ app.post('/osignup2', function(req,res){
   let get_id = "SELECT oid FROM owners WHERE email = ?;";
   let email_values = req.body.email;
   
-
   let id_res;
   pool.getConnection(function(err,connection){
     if (err) throw err;
@@ -245,7 +337,7 @@ app.post('/osignup2', function(req,res){
           res.writeHead(200,{
             'Content-Type' : 'text/plain'
           })
-          res.end("success");
+          res.end(id_res.toString());
         }
       });
     }, 200 );

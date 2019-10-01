@@ -33,6 +33,14 @@ class Login extends Component {
         if (isLoginSuccess) {
             localStorage.setItem("usertype", this.state.usertype);
             redirectVar = <Redirect to= "/home"/>
+            //console.log("usertype", this.state.usertype);
+            localStorage.setItem("usertype", "customer");
+            if (this.state.usertype === 'Restaurant Owner') {
+                //console.log("usertype", this.state.usertype);
+                redirectVar = <Redirect to= "/ohome"/>
+                localStorage.setItem("usertype", "owner");
+            }
+            
         }
         return (
             <div>

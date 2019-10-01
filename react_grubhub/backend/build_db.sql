@@ -31,3 +31,23 @@ CREATE TABLE restaurants
   PRIMARY KEY (rid),
   FOREIGN KEY (oid) REFERENCES owners(oid)
 );
+
+CREATE TABLE orders 
+  (order_id int NOT NULL AUTO_INCREMENT, 
+  rid int NOT NULL,
+  cid int NOT NULL,
+  status VARCHAR(255) NOT NULL,
+  items VARCHAR(255) NOT NULL,
+  cname VARCHAR(255) NOT NULL,
+  caddress VARCHAR(255) NOT NULL,
+  PRIMARY KEY (order_id),
+  FOREIGN KEY (rid) REFERENCES restaurants(rid),
+  FOREIGN KEY (cid) REFERENCES customers(cid)
+);
+
+INSERT INTO orders (rid, cid, status, items, cname, caddress)
+VALUES (7, 1, 'new', '1,2,3.4;2,5,12', 'jing tong', '1458 blvd');
+
+INSERT INTO orders (rid, cid, status, items, cname, caddress)
+VALUES (7, 4, 'preparing', '1,2,3.4;2,5,12', 'Jing Tong', '3707 blvd');
+

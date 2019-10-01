@@ -26,6 +26,7 @@ class CustomerSignup extends Component {
         let redirectVar = null;
         if (isLoginSuccess) {
             redirectVar = <Redirect to= "/home"/>
+            localStorage.setItem("usertype", "customer");
         }
         return (
             <div>
