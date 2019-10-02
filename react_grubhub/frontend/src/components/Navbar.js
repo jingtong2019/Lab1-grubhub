@@ -21,7 +21,8 @@ class Navbar extends Component {
     
     render(){
         let flag = localStorage.getItem("authLogin");
-        //console.log("navbar:", typeof(flag), flag);
+        let usertype = localStorage.getItem("usertype");
+        console.log("navbar:", localStorage.getItem("usertype"));
         return(
             <div>
             <head>
@@ -38,7 +39,8 @@ class Navbar extends Component {
                     </div>
                     {flag === "true" && <div className="topnav-right">
                     <ul class="nav navbar-nav">
-                    <li><Link to="/account">Account</Link></li>
+                    {usertype === "customer" && <li><Link to="/account">Account</Link></li>}
+                    {usertype === "owner" && <li><Link to="/oaccount">Account</Link></li>}
                     <li class="nav-item"><a href="#">Cart</a></li>
                     <li onClick={this.onClick}><Link to="/">Logout</Link></li>
                     </ul>

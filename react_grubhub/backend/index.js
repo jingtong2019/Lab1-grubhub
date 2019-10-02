@@ -79,6 +79,14 @@ app.post('/ohome', function(req,res){
         else {
           rid = result[0].rid;
           let sql2 = "SELECT order_id, cid, status, items, cname, caddress FROM orders WHERE rid = " + rid.toString() + ";";
+          if (req.body.show_no_delivered && !req.body.show_delivered) {
+            sql2 = "SELECT order_id, cid, status, items, cname, caddress FROM orders WHERE rid = " + rid.toString() 
+              + " AND status != \"delivered\";";
+          }
+          else if (!req.body.show_no_delivered && req.body.show_delivered) {
+            sql2 = "SELECT order_id, cid, status, items, cname, caddress FROM orders WHERE rid = " + rid.toString() 
+              + " AND status = \"delivered\";";
+          }
           connection.query(sql2, function(err, info){
             connection.release();
             if (err) {

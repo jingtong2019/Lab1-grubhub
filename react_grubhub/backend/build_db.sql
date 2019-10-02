@@ -28,6 +28,8 @@ CREATE TABLE restaurants
   rname VARCHAR(255) NOT NULL,
   address VARCHAR(255) NOT NULL,
   phone VARCHAR(255) NOT NULL,
+  cuisine VARCHAR(255) DEFAULT "",
+  restaurant_image MEDIUMBLOB,
   PRIMARY KEY (rid),
   FOREIGN KEY (oid) REFERENCES owners(oid)
 );

@@ -5,19 +5,20 @@ import testimage from '../images/default_profile.jpeg';
 import axios from 'axios';
 
 
-class Account extends Component {
+class Account_for_Owner extends Component {
     constructor(props) {
         super(props);
         this.state = {
             updated_status: 0,
-            profile_image: testimage
+            profile_image: testimage,
+            restaurant_image: testimage
         };
     }
 
     componentDidMount(){
         const userid = localStorage.getItem("userid");
         const data = {userid: userid};
-        axios.post('http://localhost:3001/account1', data)
+        axios.post('http://localhost:3001/oaccount1', data)
                 .then((response) => {
                 if(response.status === 200){
                     // this.setState({
@@ -40,7 +41,7 @@ class Account extends Component {
         const data = this.state;
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post('http://localhost:3001/account2',data)
+        axios.post('http://localhost:3001/oaccount2',data)
             .then(response => {
                 console.log("Status Code : ",response.status);
                 //console.log("type",typeof(response.data));
@@ -62,7 +63,7 @@ class Account extends Component {
     onSubmit = (e) => {
         e.preventDefault();
         const data = new FormData();
-        data.append('myImage', this.state.image);
+        data.append('myImage', this.state.pimage);
         const config = {
             headers: {
                 'content-type': 'multipart/form-data'
@@ -70,7 +71,28 @@ class Account extends Component {
         };
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post('http://localhost:3001/account3',data, config)
+        axios.post('http://localhost:3001/oaccount3',data, config)
+            .then(response => {
+                console.log("Status Code : ",response.status);
+                //console.log("type",typeof(response.data));
+                if(response.status === 200){
+                    console.log("sign up successfully!");
+                }
+        })
+    }
+
+    rimageSubmit = (e) => {
+        e.preventDefault();
+        const data = new FormData();
+        data.append('myImage', this.state.rimage);
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        };
+        axios.defaults.withCredentials = true;
+        //make a post request with the user data
+        axios.post('http://localhost:3001/oaccount3',data, config)
             .then(response => {
                 console.log("Status Code : ",response.status);
                 //console.log("type",typeof(response.data));
@@ -85,6 +107,7 @@ class Account extends Component {
         
         let redirectVar = null;
         if (flag !== "true") {
+            console.log("!flag:", !flag);
             redirectVar = <Redirect to= "/"/>
         }
         return (
@@ -98,8 +121,15 @@ class Account extends Component {
                     <img src={this.state.profile_image} height="100" width="100"></img>
 
                     <form onSubmit={this.onSubmit}>
-                    <span>File</span>
-                    <input name = "myImage" type="file" onChange={e=>this.setState({image:e.target.files[0]})} required/>
+                    <span>Profile image</span>
+                    <input name = "myImage" type="file" onChange={e=>this.setState({pimage:e.target.files[0]})} required/>
+                    <input type="submit" value="Upload" />
+                    </form>
+
+                    <img src={this.state.restaurant_image} height="100" width="100"></img>
+                    <form onSubmit={this.rimageSubmit}>
+                    <span>Restaurant image</span>
+                    <input name = "myImage" type="file" onChange={e=>this.setState({rimage:e.target.files[0]})} required/>
                     <input type="submit" value="Upload" />
                     </form>
 
@@ -110,8 +140,12 @@ class Account extends Component {
                     <input className="box_input" type="email" name="email" value={this.state.email} placeholder="Email address" onChange={e=>this.setState({email:e.target.value})} required/><br/>
                     <br/>
                     <input className="box_input" type="text" name="phone" value={this.state.phone} placeholder="Phone number" onChange={e=>this.setState({phone:e.target.value})}/><br/>
-                    <button className="save_button" type="submit" onClick={this.onClick}>Save</button>
+
+                    <input className="box_input" type="text" name="rname" value={this.state.rname} placeholder="Restaurant name" onChange={e=>this.setState({rname:e.target.value})}/><br/>
                     
+                    <input className="box_input" type="text" name="cuisine" value={this.state.cuisine} placeholder="Cuisine" onChange={e=>this.setState({cuisine:e.target.value})}/><br/>
+                    <button className="save_button" type="submit" onClick={this.onClick}>Save</button>
+        
                     </form>
                     {this.state.updated_status === 1 && <div>{"Information saved successfully!"}</div>}
                     {this.state.updated_status === 2 && <div>{"Error, email been used."}</div>}
@@ -123,4 +157,4 @@ class Account extends Component {
 }
 
 
-export default Account;
+export default Account_for_Owner;
