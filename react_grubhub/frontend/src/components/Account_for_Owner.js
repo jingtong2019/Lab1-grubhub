@@ -29,16 +29,31 @@ class Account_for_Owner extends Component {
                         lname: response.data.lname,
                         email: response.data.email,
                         phone: response.data.phone,
-                        userid: userid,
-                        profile_image: "data:image/jpeg;base64," + response.data.image_result
+                        cuisine: response.data.cuisine,
+                        rname: response.data.rname,
+                        userid: userid
                     })
+                    if (response.data.pimage_result !== "no image") {
+                        this.setState({profile_image: "data:image/jpeg;base64," + response.data.pimage_result});
+                    }
+                    if (response.data.rimage_result !== "no image") {
+                        this.setState({restaurant_image: "data:image/jpeg;base64," + response.data.rimage_result});
+                    }
                 }
             });
     }
 
     onClick = (e) => {
         e.preventDefault();
-        const data = this.state;
+        const data = {
+            fname: this.state.fname,
+            lname: this.state.lname,
+            email: this.state.email,
+            phone: this.state.phone,
+            cuisine: this.state.cuisine,
+            rname: this.state.rname,
+            userid: this.state.userid
+        }
         axios.defaults.withCredentials = true;
         //make a post request with the user data
         axios.post('http://localhost:3001/oaccount2',data)
@@ -64,6 +79,8 @@ class Account_for_Owner extends Component {
         e.preventDefault();
         const data = new FormData();
         data.append('myImage', this.state.pimage);
+        data.append('userid', this.state.userid);
+        
         const config = {
             headers: {
                 'content-type': 'multipart/form-data'
@@ -85,6 +102,7 @@ class Account_for_Owner extends Component {
         e.preventDefault();
         const data = new FormData();
         data.append('myImage', this.state.rimage);
+        data.append('userid', this.state.userid);
         const config = {
             headers: {
                 'content-type': 'multipart/form-data'
@@ -92,7 +110,7 @@ class Account_for_Owner extends Component {
         };
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post('http://localhost:3001/oaccount3',data, config)
+        axios.post('http://localhost:3001/oaccount4',data, config)
             .then(response => {
                 console.log("Status Code : ",response.status);
                 //console.log("type",typeof(response.data));

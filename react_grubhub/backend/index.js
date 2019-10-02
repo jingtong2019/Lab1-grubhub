@@ -77,6 +77,7 @@ app.post('/ohome', function(req,res){
           res.end("failed");
         }
         else {
+          //console.log("reuslt: ", result[0]);
           rid = result[0].rid;
           let sql2 = "SELECT order_id, cid, status, items, cname, caddress FROM orders WHERE rid = " + rid.toString() + ";";
           if (req.body.show_no_delivered && !req.body.show_delivered) {
@@ -99,7 +100,6 @@ app.post('/ohome', function(req,res){
                   res.writeHead(200,{
                     'Content-Type' : 'application/json'
               })
-              
               res.end(JSON.stringify(info));
             }
           });
@@ -156,12 +156,172 @@ app.post('/ohomeCancel', function(req,res){
         }
     });
   });
+});
+
+
+app.post('/oaccount1', function(req,res){
+  console.log("req.body.userid", req.body.userid);
+  let info;
+  let sql1 = "SELECT fname, lname, email, rname, profile_image FROM owners WHERE oid = " + req.body.userid + ";";
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+    connection.query(sql1, function(err, result){
+        //connection.release();
+        if (err) {
+          res.writeHead(202,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end("failed");
+        }
+        else {
+          if (result[0].profile_image === null) {
+            info = {
+              ...result[0],
+              pimage_result: "no image"
+            }
+          }
+          else {
+            const buf = new Buffer.from(result[0].profile_image, "binary");
+            info = {
+              ...result[0],
+              pimage_result: buf.toString('base64')
+            }
+          }
+        }
+    });
+    let sql2 = "SELECT phone, cuisine, restaurant_image FROM restaurants WHERE oid = " + req.body.userid.toString() + ";";
+    connection.query(sql2, function(err, result){
+      connection.release();
+      if (err) throw err;
+      if (err) {
+        res.writeHead(202,{
+          'Content-Type' : 'text/plain'
+        })
+        res.end("failed");
+      }
+      else {
+        res.writeHead(200,{
+          'Content-Type' : 'application/json'
+        })
+        if (result[0].restaurant_image === null) {
+          info = {
+            ...info,
+            ...result[0],
+            rimage_result: "no image"
+          }
+        }
+        else {
+          const buf = new Buffer.from(result[0].restaurant_image, "binary");
+          info = {
+            ...info,
+            ...result[0],
+            rimage_result: buf.toString('base64')
+          }
+        }
+        res.end(JSON.stringify(info));
+      }
+    });
+
+  });
 })
 
+app.post('/oaccount2', function(req,res){
+  let sql = "UPDATE owners SET fname = ?, lname = ?, email = ?, rname = ? WHERE oid = ?;";
+  let values = [req.body.fname, req.body.lname, req.body.email, req.body.rname, req.body.userid];
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+    connection.query(sql, values, function(err, result){
+        //connection.release();
+        if (err) {
+          res.writeHead(202,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end("failed");
+        }
+        else {
+          let sql2 = "UPDATE restaurants SET rname = ?, phone = ?, cuisine = ? WHERE oid = ?;";
+          let values2 = [req.body.rname, req.body.phone, req.body.cuisine, req.body.userid];
+          connection.query(sql2, values2, function(err, result){
+            connection.release();
+            if (err) {
+              res.writeHead(202,{
+                'Content-Type' : 'text/plain'
+              })
+              res.end("failed");
+            }
+            else {
+              res.writeHead(200,{
+                'Content-Type' : 'text/plain'
+              })
+              res.end("success");
+            }
+          });
+        }
+    });
+  });
+})
+
+app.post('/oaccount3', upload.single('myImage'), (req, res) => {
+  //console.log("all files", req.body.userid);
+  //console.log("req.file::", req.file.path);
+  let sql = "UPDATE owners SET profile_image = ? WHERE oid = " + req.body.userid + ";";
+  let values = fs.readFileSync(req.file.path);
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+    connection.query(sql, values, function(err, result){
+        connection.release();
+        if (err) {
+          res.writeHead(202,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end("image too large");
+        }
+        else {
+          fs.unlinkSync(req.file.path);
+          res.writeHead(200,{
+            'Content-Type' : 'application/json'
+          })
+          res.end("success");
+        }
+    });
+  });
+});
+
+app.post('/oaccount4', upload.single('myImage'), (req, res) => {
+  console.log("test  all files", req.body.userid);
+  console.log("req.file::", req.file.path);
+  let sql = "UPDATE restaurants SET restaurant_image = ? WHERE oid = " + req.body.userid + ";";
+  let values = fs.readFileSync(req.file.path);
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+    connection.query(sql, values, function(err, result){
+        connection.release();
+        if (err) {
+          res.writeHead(202,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end("image too large");
+        }
+        else {
+          fs.unlinkSync(req.file.path);
+          res.writeHead(200,{
+            'Content-Type' : 'application/json'
+          })
+          res.end("success");
+        }
+    });
+  });
+});
 
 app.post('/account3', upload.single('myImage'), (req, res) => {
+  console.log("all files", req.body.userid);
   console.log("req.file::", req.file.path);
-  let sql = "UPDATE customers SET profile_image = ?;";
+  //console.log("userid: ", req.body.userid);
+  let sql = "UPDATE customers SET profile_image = ? WHERE cid = " + req.body.userid + ";";
   let values = fs.readFileSync(req.file.path);
   pool.getConnection(function(err,connection){
     if (err) throw err;
@@ -210,11 +370,21 @@ app.post('/account1', function(req,res){
           res.writeHead(200,{
                'Content-Type' : 'application/json'
           })
-          const buf = new Buffer.from(result[0].profile_image, "binary");
-          let info = {
-            ...result[0],
-            image_result: buf.toString('base64')
+          let info;
+          if (result[0].profile_image === null) {
+            info = {
+              ...result[0],
+              image_result: "no image"
+            }
           }
+          else {
+            const buf = new Buffer.from(result[0].profile_image, "binary");
+            info = {
+              ...result[0],
+              image_result: buf.toString('base64')
+            }
+          }
+          
           res.end(JSON.stringify(info));
         }
     });

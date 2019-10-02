@@ -29,8 +29,10 @@ class Account extends Component {
                         email: response.data.email,
                         phone: response.data.phone,
                         userid: userid,
-                        profile_image: "data:image/jpeg;base64," + response.data.image_result
-                    })
+                    });
+                    if (response.data.image_result !== "no image") {
+                        this.setState({profile_image: "data:image/jpeg;base64," + response.data.image_result});
+                    }
                 }
             });
     }
@@ -63,6 +65,8 @@ class Account extends Component {
         e.preventDefault();
         const data = new FormData();
         data.append('myImage', this.state.image);
+        data.append('userid', this.state.userid);
+        
         const config = {
             headers: {
                 'content-type': 'multipart/form-data'
@@ -98,7 +102,7 @@ class Account extends Component {
                     <img src={this.state.profile_image} height="100" width="100"></img>
 
                     <form onSubmit={this.onSubmit}>
-                    <span>File</span>
+                    <span>Profile image</span>
                     <input name = "myImage" type="file" onChange={e=>this.setState({image:e.target.files[0]})} required/>
                     <input type="submit" value="Upload" />
                     </form>

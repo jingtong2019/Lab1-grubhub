@@ -19,6 +19,7 @@ CREATE TABLE owners
   lname varchar(255) NOT NULL,
   rname VARCHAR(255) NOT NULL,
   zipcode VARCHAR(255) NOT NULL,
+  profile_image MEDIUMBLOB,
   PRIMARY KEY (oid)
 );
 
