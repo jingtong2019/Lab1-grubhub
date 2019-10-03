@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
 import {Redirect} from 'react-router';
 import './Home.css';
 import axios from 'axios';
@@ -123,6 +122,8 @@ class Home_for_Owner extends Component {
                 </tr>
             )
         })
+
+        //console.log("details:", details);
 
         return(
             <div>

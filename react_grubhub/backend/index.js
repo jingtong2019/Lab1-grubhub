@@ -58,8 +58,89 @@ var pool = mysql.createPool({
   database : 'grubhub'
 });
 
+app.post('/addItem', upload.single('myImage'), (req, res) => {
+  console.log("req.file::", req.file.path);
+  console.log("type", typeof(fs.readFileSync(req.file.path)));
+  let sql = "INSERT INTO menus (rid, name, description, price, sid, menu_image) VALUES (" + req.body.rid
+       + ", \"" + req.body.name + "\", \"" + req.body.description + "\", " + req.body.price + ", " + req.body.sid
+       + ", " + "?);";
+  let values = fs.readFileSync(req.file.path);
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+    connection.query(sql, values, function(err){
+        connection.release();
+        if (err) throw err;
+        if (err) {
+          res.writeHead(202,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end("image too large");
+        }
+        else {
+          fs.unlinkSync(req.file.path);
+          res.writeHead(200,{
+            'Content-Type' : 'application/json'
+          })
+          res.end("success");
+        }
+    });
+  });
+});
 
-app.post('/addSection', function(req,res){
+app.post('/updateItem', upload.single('myImage'), (req, res) => {
+  console.log("req.file::", req.file.path);
+  let sql = "UPDATE menus SET name = \"" + req.body.name + "\", description = \"" + req.body.description 
+  + "\", price = " + req.body.price + ", menu_image = ? WHERE mid = " + req.body.mid + ";";
+  let values = fs.readFileSync(req.file.path);
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+    connection.query(sql, values, function(err){
+        connection.release();
+        if (err) throw err;
+        if (err) {
+          res.writeHead(202,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end("image too large");
+        }
+        else {
+          fs.unlinkSync(req.file.path);
+          res.writeHead(200,{
+            'Content-Type' : 'application/json'
+          })
+          res.end("success");
+        }
+    });
+  });
+});
+
+app.post('/deleteItem', function(req,res){
+  let sql1 = "DELETE FROM menus WHERE mid = " + req.body.mid + ";";
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+          
+    connection.query(sql1, function(err){
+      connection.release();
+      if (err) {
+        res.writeHead(202,{
+          'Content-Type' : 'text/plain'
+        })
+        res.end("failed");
+      }
+      else {
+        res.writeHead(200,{
+          'Content-Type' : 'text/plain'
+        })
+        res.end("success");
+      }
+    });
+  });
+})
+
+app.post('/menu', function(req,res){
   console.log("req.body.userid", req.body.userid);
   let rid;
   let sql1 = "SELECT rid FROM restaurants WHERE oid = " + req.body.userid.toString() + ";";
@@ -67,26 +148,33 @@ app.post('/addSection', function(req,res){
     if (err) throw err;
     console.log('connected as id ' + connection.threadId);
     connection.query(sql1, function(err, result){
-        if (err) {
-          res.writeHead(202,{
-            'Content-Type' : 'text/plain'
-          })
-          res.end("failed");
-        }
-        else {
-          rid = result[0].rid;
-          let sql2 = "SELECT sid FROM sections WHERE rid = " + rid.toString() + " AND sname = \"" + req.body.section_name + "\";";
-          connection.query(sql2, function(err, result){
-            if (err) {
-              res.writeHead(202,{
-                'Content-Type' : 'text/plain'
-              })
-              res.end("failed");
-            }
-            if (result.length === 0) {
-              let sql3 = "INSERT INTO sections (rid, sname) VALUES (" + rid.toString() + ", \"" + req.body.section_name +"\");";
+      if (err) {
+        res.writeHead(202,{
+          'Content-Type' : 'text/plain'
+        })
+        res.end("failed");
+      }
+      else {
+        rid = (result[0].rid).toString();
+        let sql2 = "SELECT sid, sname FROM sections WHERE rid = " + rid + ";";
+        connection.query(sql2, function(err, result){
+          if (err) {
+            res.writeHead(202,{
+              'Content-Type' : 'text/plain'
+            })
+            res.end("failed");
+          }
+          else {
+            let sid_list = [];
+            let sname_list = [];
+            let info = [];
+            let i;
+            for (i=0; i< result.length; i++) {
+              sid_list.push(result[i].sid);
+              sname_list.push(result[i].sname);
+              let sql3 = "SELECT mid, name, description, price, menu_image FROM menus WHERE rid = " + 
+                    rid + " AND sid = " + result[i].sid.toString() + ";";
               connection.query(sql3, function(err, result){
-                connection.release();
                 if (err) {
                   res.writeHead(202,{
                     'Content-Type' : 'text/plain'
@@ -94,23 +182,147 @@ app.post('/addSection', function(req,res){
                   res.end("failed");
                 }
                 else {
-                  res.writeHead(200,{
-                    'Content-Type' : 'text/plain'
-                  })
-                  res.end("success");
+                  
+                  if (result.length !== 0) {
+                    for (let j=0; j < result.length; j++) {
+                      const buf = new Buffer.from(result[j].menu_image, "binary");
+                      let image = buf.toString('base64');
+                      result[j].menu_image = image;
+                    }
+                  }
+                  info.push(result);
                 }
               });
             }
-            else {
-              res.writeHead(203,{
-                'Content-Type' : 'text/plain'
+            setTimeout( function(){
+              connection.release();
+              let final = [];
+              final.push(sid_list);
+              final.push(sname_list);
+              final.push(info);
+              final.push(rid);
+              final.push(sname_list.length);
+              
+              res.writeHead(200,{
+                'Content-Type' : 'application/json'
               })
-              res.end("section name already exist");
-            }
-          });
-        }
+              
+              res.end(JSON.stringify(final));
+            }, 200 );
+          }
+        });   
+      }
     });
 
+  });
+})
+
+app.post('/addSection', function(req,res){
+  let rid = req.body.rid;
+  let sql1 = "SELECT sid FROM sections WHERE rid = " + rid.toString() + " AND sname = \"" + req.body.section_name + "\";";
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+          
+    connection.query(sql1, function(err, result){
+      if (err) {
+        res.writeHead(202,{
+          'Content-Type' : 'text/plain'
+        })
+        res.end("failed");
+      }
+      if (result.length === 0) {
+        let sql2 = "INSERT INTO sections (rid, sname) VALUES (" + rid.toString() + ", \"" + req.body.section_name +"\");";
+        connection.query(sql2, function(err, result){
+          connection.release();
+          if (err) {
+            res.writeHead(202,{
+              'Content-Type' : 'text/plain'
+            })
+            res.end("failed");
+          }
+          else {
+            res.writeHead(200,{
+              'Content-Type' : 'text/plain'
+            })
+            res.end("success");
+          }
+        });
+      }
+      else {
+        res.writeHead(203,{
+          'Content-Type' : 'text/plain'
+        })
+        res.end("section name already exist");
+      }
+    });
+  });
+})
+
+app.post('/deleteSection', function(req,res){
+  let sql1 = "DELETE FROM sections WHERE rid = " + req.body.rid + " AND sid = " + req.body.sid + ";";
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+          
+    connection.query(sql1, function(err){
+      connection.release();
+      if (err) {
+        res.writeHead(202,{
+          'Content-Type' : 'text/plain'
+        })
+        res.end("failed");
+      }
+      else {
+        res.writeHead(200,{
+          'Content-Type' : 'text/plain'
+        })
+        res.end("success");
+      }
+    });
+  });
+})
+
+app.post('/updateSection', function(req,res){
+  let rid = req.body.rid;
+  let sql1 = "SELECT sid FROM sections WHERE rid = " + rid.toString() + " AND sname = \"" + req.body.update_section_name + "\";";
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+          
+    connection.query(sql1, function(err, result){
+      if (err) {
+        res.writeHead(202,{
+          'Content-Type' : 'text/plain'
+        })
+        res.end("failed");
+      }
+      if (result.length === 0) {
+        let sql2 = "UPDATE sections SET sname = \"" + req.body.update_section_name + "\" WHERE rid = " + req.body.rid 
+            + " AND sid = " + req.body.sid + ";";
+        connection.query(sql2, function(err, result){
+          connection.release();
+          if (err) {
+            res.writeHead(202,{
+              'Content-Type' : 'text/plain'
+            })
+            res.end("failed");
+          }
+          else {
+            res.writeHead(200,{
+              'Content-Type' : 'text/plain'
+            })
+            res.end("success");
+          }
+        });
+      }
+      else {
+        res.writeHead(203,{
+          'Content-Type' : 'text/plain'
+        })
+        res.end("section name already exist");
+      }
+    });
   });
 })
 
@@ -123,7 +335,6 @@ app.post('/ohome', function(req,res){
     if (err) throw err;
     console.log('connected as id ' + connection.threadId);
     connection.query(sql1, function(err, result){
-        //connection.release();
         if (err) {
           res.writeHead(202,{
             'Content-Type' : 'text/plain'
