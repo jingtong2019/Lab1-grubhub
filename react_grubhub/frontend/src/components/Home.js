@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
 import {Redirect} from 'react-router';
 import './Home.css';
 
@@ -7,8 +6,17 @@ import './Home.css';
 class Home extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            gotosearch: false
+        };
     }
+
+    onSubmit = (e) => {
+        e.preventDefault();
+        localStorage.setItem("to_search", this.state.to_search);
+        this.setState({gotosearch: true});
+    }
+
 
 
     render() {
@@ -19,6 +27,9 @@ class Home extends Component {
             console.log("!flag:", !flag);
             redirectVar = <Redirect to= "/"/>
         }
+        if (this.state.gotosearch === true) {
+            redirectVar = <Redirect to= "/search"/>
+        }
         return (
             <div>
                 {redirectVar}
@@ -26,7 +37,7 @@ class Home extends Component {
                     <br/><br/>
                     <h1 className="h1_style">Who delivers in your neighborhood?</h1>
                     <div className="search_container">
-                    <form>
+                    <form onSubmit={this.onSubmit}>
                     <input className="box" type="text" name="to_search" onChange={e=>this.setState({to_search:e.target.value})}/>
                     <input className="find_button" type="submit" value="Find food" />
                     </form>

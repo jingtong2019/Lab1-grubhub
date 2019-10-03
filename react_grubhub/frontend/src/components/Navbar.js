@@ -1,5 +1,6 @@
 import React,{Component} from 'react';
 import {Link} from 'react-router-dom';
+import {StyledLink} from './Signup';
 import {connect} from 'react-redux';
 import {setLoginError, setLoginPending, setLoginSuccess} from '../redux_files/reducer/index';
 import './Navbar.css';
@@ -34,7 +35,8 @@ class Navbar extends Component {
             <nav class="navbar navbar-inverse">
                 <div class="container-fluid">
                     <div class="navbar-header">
-                        <a class="navbar-brand" href="#">Grubhub</a>
+                        {usertype === "customer" && <a class="navbar-brand"><StyledLink to="/home">Grubhub</StyledLink></a>}
+                        {usertype === "owner" && <a class="navbar-brand"><StyledLink to="/ohome">Grubhub</StyledLink></a>}
                     </div>
                     {flag === "true" && <div className="topnav-right">
                     <ul class="nav navbar-nav">

@@ -6,6 +6,7 @@ import CustomerSignup from './CustomerSignup';
 import OwnerSignup from './OwnerSignup';
 import OwnerSignup2 from './OwnerSignup2';
 import Home from './Home';
+import Search from './Search';
 import Navbar from './Navbar'
 import Account from './Account';
 import Home_for_Owner from './Home_for_Owner';
@@ -22,6 +23,7 @@ class Main extends Component {
                 <Route exact path="/" component={Login}/>
                 <Route path="/signup" component={Signup}/>
                 <Route path="/home" component={Home}/>
+                <Route path="/search" component={Search}/>
                 <Route path="/ohome" component={Home_for_Owner}/>
                 <Route path="/oaccount" component={Account_for_Owner}/>
                 <Route path="/menu" component={Menu}/>

@@ -58,6 +58,34 @@ var pool = mysql.createPool({
   database : 'grubhub'
 });
 
+
+app.post('/search', function(req,res){
+  let sql = "SELECT menus.mid, menus.rid, menus.name, restaurants.rname, restaurants.cuisine FROM menus INNER JOIN \
+    restaurants ON menus.rid = restaurants.rid WHERE menus.name LIKE \"%" + req.body.to_search + "%\";";
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+          
+    connection.query(sql, function(err, result){
+      connection.release();
+      if (err) {
+        res.writeHead(202,{
+          'Content-Type' : 'text/plain'
+        })
+        res.end("failed");
+      }
+      else {
+        res.writeHead(200,{
+          'Content-Type' : 'application/json'
+        })
+        console.log("result", result);
+        res.end(JSON.stringify(result));
+      }
+    });
+  });
+})
+
+
 app.post('/addItem', upload.single('myImage'), (req, res) => {
   console.log("req.file::", req.file.path);
   console.log("type", typeof(fs.readFileSync(req.file.path)));
@@ -90,6 +118,7 @@ app.post('/addItem', upload.single('myImage'), (req, res) => {
 
 app.post('/updateItem', upload.single('myImage'), (req, res) => {
   console.log("req.file::", req.file.path);
+  console.log("test", req.body);
   let sql = "UPDATE menus SET name = \"" + req.body.name + "\", description = \"" + req.body.description 
   + "\", price = " + req.body.price + ", menu_image = ? WHERE mid = " + req.body.mid + ";";
   let values = fs.readFileSync(req.file.path);
