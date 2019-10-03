@@ -10,6 +10,7 @@ import Navbar from './Navbar'
 import Account from './Account';
 import Home_for_Owner from './Home_for_Owner';
 import Account_for_Owner from './Account_for_Owner';
+import Menu from './Menu';
 
 //Create a Main Component
 class Main extends Component {
@@ -23,6 +24,7 @@ class Main extends Component {
                 <Route path="/home" component={Home}/>
                 <Route path="/ohome" component={Home_for_Owner}/>
                 <Route path="/oaccount" component={Account_for_Owner}/>
+                <Route path="/menu" component={Menu}/>
                 <Route path="/account" component={Account}/>
                 <Route path="/csignup" component={CustomerSignup}/>
                 <Route path="/osignup" component={OwnerSignup}/>

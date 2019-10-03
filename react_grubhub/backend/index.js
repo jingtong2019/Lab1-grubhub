@@ -59,6 +59,60 @@ var pool = mysql.createPool({
 });
 
 
+app.post('/addSection', function(req,res){
+  console.log("req.body.userid", req.body.userid);
+  let rid;
+  let sql1 = "SELECT rid FROM restaurants WHERE oid = " + req.body.userid.toString() + ";";
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+    connection.query(sql1, function(err, result){
+        if (err) {
+          res.writeHead(202,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end("failed");
+        }
+        else {
+          rid = result[0].rid;
+          let sql2 = "SELECT sid FROM sections WHERE rid = " + rid.toString() + " AND sname = \"" + req.body.section_name + "\";";
+          connection.query(sql2, function(err, result){
+            if (err) {
+              res.writeHead(202,{
+                'Content-Type' : 'text/plain'
+              })
+              res.end("failed");
+            }
+            if (result.length === 0) {
+              let sql3 = "INSERT INTO sections (rid, sname) VALUES (" + rid.toString() + ", \"" + req.body.section_name +"\");";
+              connection.query(sql3, function(err, result){
+                connection.release();
+                if (err) {
+                  res.writeHead(202,{
+                    'Content-Type' : 'text/plain'
+                  })
+                  res.end("failed");
+                }
+                else {
+                  res.writeHead(200,{
+                    'Content-Type' : 'text/plain'
+                  })
+                  res.end("success");
+                }
+              });
+            }
+            else {
+              res.writeHead(203,{
+                'Content-Type' : 'text/plain'
+              })
+              res.end("section name already exist");
+            }
+          });
+        }
+    });
+
+  });
+})
 
 app.post('/ohome', function(req,res){
   console.log("req.body.userid", req.body.userid);

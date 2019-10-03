@@ -1,7 +1,6 @@
 import React,{Component} from 'react';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {Redirect} from 'react-router';
 import {setLoginError, setLoginPending, setLoginSuccess} from '../redux_files/reducer/index';
 import './Navbar.css';
 
@@ -41,7 +40,8 @@ class Navbar extends Component {
                     <ul class="nav navbar-nav">
                     {usertype === "customer" && <li><Link to="/account">Account</Link></li>}
                     {usertype === "owner" && <li><Link to="/oaccount">Account</Link></li>}
-                    <li class="nav-item"><a href="#">Cart</a></li>
+                    {usertype === "customer" && <li class="nav-item"><a href="#">Cart</a></li>}
+                    {usertype === "owner" && <li><Link to="/menu">Menu</Link></li>}
                     <li onClick={this.onClick}><Link to="/">Logout</Link></li>
                     </ul>
                     </div>}

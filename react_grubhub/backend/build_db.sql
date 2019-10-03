@@ -48,6 +48,29 @@ CREATE TABLE orders
   FOREIGN KEY (cid) REFERENCES customers(cid)
 );
 
+CREATE TABLE sections 
+  (sid int NOT NULL AUTO_INCREMENT, 
+  rid int NOT NULL,
+  sname VARCHAR(255) NOT NULL,
+  PRIMARY KEY (sid),
+  FOREIGN KEY (rid) REFERENCES restaurants(rid)
+);
+
+
+CREATE TABLE menus 
+  (mid int NOT NULL AUTO_INCREMENT, 
+  rid int NOT NULL,
+  sid int NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  description VARCHAR(255) NOT NULL,
+  price FLOAT NOT NULL,
+  menu_image MEDIUMBLOB,
+  PRIMARY KEY (mid),
+  FOREIGN KEY (rid) REFERENCES restaurants(rid),
+  FOREIGN KEY (sid) REFERENCES sections(sid) ON DELETE CASCADE
+);
+
+
 INSERT INTO orders (rid, cid, status, items, cname, caddress)
 VALUES (7, 1, 'new', '1,2,3.4;2,5,12', 'jing tong', '1458 blvd');
 
