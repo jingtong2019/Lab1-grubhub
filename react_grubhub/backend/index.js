@@ -59,6 +59,68 @@ var pool = mysql.createPool({
 });
 
 
+
+app.post('/detail', function(req,res){
+  let rid = req.body.rid.toString();
+  let sql2 = "SELECT sid, sname FROM sections WHERE rid = " + rid + ";";
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+    connection.query(sql2, function(err, result){
+      if (err) {
+        res.writeHead(202,{
+          'Content-Type' : 'text/plain'
+        })
+        res.end("failed");
+      }
+      else {
+        let sid_list = [];
+        let sname_list = [];
+        let info = [];
+        let i;
+        for (i=0; i< result.length; i++) {
+          sid_list.push(result[i].sid);
+          sname_list.push(result[i].sname);
+          let sql3 = "SELECT mid, name, description, price, menu_image FROM menus WHERE rid = " + 
+                rid + " AND sid = " + result[i].sid.toString() + ";";
+          connection.query(sql3, function(err, result){
+            if (err) {
+              res.writeHead(202,{
+                'Content-Type' : 'text/plain'
+              })
+              res.end("failed");
+            }
+            else {
+              if (result.length !== 0) {
+                for (let j=0; j < result.length; j++) {
+                  const buf = new Buffer.from(result[j].menu_image, "binary");
+                  let image = buf.toString('base64');
+                  result[j].menu_image = image;
+                }
+              }
+              info.push(result);
+            }
+          });
+        }
+        setTimeout( function(){
+          connection.release();
+          let final = [];
+          final.push(sid_list);
+          final.push(sname_list);
+          final.push(info);
+          final.push(sname_list.length);
+          
+          res.writeHead(200,{
+            'Content-Type' : 'application/json'
+          })
+          
+          res.end(JSON.stringify(final));
+        }, 200 );
+      }
+    });   
+  });
+})
+
 app.post('/search', function(req,res){
   let sql = "SELECT menus.mid, menus.rid, menus.name, restaurants.rname, restaurants.cuisine FROM menus INNER JOIN \
     restaurants ON menus.rid = restaurants.rid WHERE menus.name LIKE \"%" + req.body.to_search + "%\";";
@@ -79,7 +141,10 @@ app.post('/search', function(req,res){
           'Content-Type' : 'application/json'
         })
         console.log("result", result);
-        res.end(JSON.stringify(result));
+        let info = [];
+        info.push(result);
+        info.push(result.length);
+        res.end(JSON.stringify(info));
       }
     });
   });

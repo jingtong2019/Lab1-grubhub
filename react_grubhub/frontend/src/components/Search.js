@@ -1,13 +1,15 @@
 import React, {Component} from 'react';
 import {Redirect} from 'react-router';
 import axios from 'axios';
+import {Link} from 'react-router-dom';
 
 
 class Search extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            to_search: localStorage.getItem("to_search")
+            to_search: localStorage.getItem("to_search"),
+            cuisine_type: "All"
         };
     }
 
@@ -21,30 +23,56 @@ class Search extends Component {
             .then(response => {
                 console.log("Status Code : ",response.status);
                 if(response.status === 200){
-                    console.log("search success");
+                    console.log("search success", response.data);
                     this.setState({
-                        result_number: response.data.length,
-                        result_list: response.data
+                        result_number: response.data[1],
+                        result_list: response.data[0]
                     })
+
+                    let cuisine_list = [];
+                    for (let i=0; i<response.data[1]; i++) {
+                        let cur = response.data[0][i].cuisine;
+                        if (cur !== "" && !cuisine_list.includes(cur)) {
+                            cuisine_list.push(cur);
+                        }
+                    }
+                    this.setState({cuisine_list: cuisine_list});
+                    this.setState({cuisine_length: cuisine_list.length});
                 }
         })
     }
     
+    onClick(rid) {
+        localStorage.setItem("rid_visit", rid);
+    }
+
+
+    createSelect = () => {
+        let select = [];
+        for (let i = 0; i < this.state.cuisine_length; i++) {
+            select.push(<option value={this.state.cuisine_list[i]}>{this.state.cuisine_list[i]}</option>);
+        }
+        return select;
+    }
 
     createTable = () => {
         let table = [];
         
         for (let i=0; i< this.state.result_number; i++) {
-            let children = [];
-            children.push(
-                <tr>
-                    <td>{this.state.result_list[i].name}</td>
-                    <td>{this.state.result_list[i].rname}</td>
-                    <td>{this.state.result_list[i].cuisine}</td>
-                </tr>
-            );
+            console.log("test", this.state.cuisine_type, this.state.result_list[i].cuisine);
+            if (this.state.cuisine_type === "All" || this.state.result_list[i].cuisine === this.state.cuisine_type) {
+                let children = [];
+                children.push(
+                    <tr>
+                        <td>{this.state.result_list[i].name}</td>
+                        <td><Link to="/detail" onClick={(e) => this.onClick(this.state.result_list[i].rid)}>{this.state.result_list[i].rname}</Link></td>
+                        <td>{this.state.result_list[i].cuisine}</td>
+                    </tr>
+                );
             
-            table.push(children);
+                table.push(children);
+            }
+            
         }
         return table;
     }
@@ -63,7 +91,14 @@ class Search extends Component {
             <div>
                 {redirectVar}
                 <div className="home_container">
-                    <h1 className="h1_style">Who delivers in your neighborhood?</h1>
+                    <h1 className="h1_style">We found these dishes for you</h1>
+
+                    <label>Choose cuisine type</label>
+                    <select onChange={(e) => this.setState({cuisine_type: e.target.value})}>
+                        <option value="All" selected>All</option>
+                        {this.createSelect()}
+                    </select>
+
                     <table>
                         {this.createTable()}
                     </table>
