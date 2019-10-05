@@ -50,18 +50,38 @@ class Order extends Component {
         this.getOrders();
     }
 
+    helper(i) {
+        let s = this.state.orders[i].items;
+        let item_list = s.split(/;/);
+        //console.log("test", item_list);
+        let children = [];
+        for (let i=0; i < item_list.length-1; i++) {
+            let item = item_list[i].split(/,/);
+            //console.log("item", item);
+            children.push(
+                <tr>
+                    <td>{item[1]}</td>
+                    <td>{item[2]}</td>
+                    <td>{item[3]}</td>
+                </tr>
+            );
+        }
+        return children;
+    }
+
     createTable = () => {
         let table = [];
-        for (let i=0; i< this.state.item_number; i++) {
-            console.log("image", this.state.item_list[i]);
-            let image = "data:image/jpeg;base64," + this.state.item_list[i].menu_image;
+        for (let i=0; i< this.state.number; i++) {
+            
             table.push(
                 <tr>
-                <td><img src={image} height="100" width="100"></img></td>
-                <td>{this.state.item_list[i].name}</td>
-                <td>{this.state.item_list[i].price}</td>
-                <td>{this.state.item_list[i].quantity}</td>
-                <td><button onClick={() => this.onClick(i)}>Remove</button></td>
+                <td>{this.state.orders[i].rname}</td>
+                <td>
+                    <table>
+                    <tbody>{this.helper(i)}</tbody>
+                    </table>
+                </td>
+                <td>{this.state.orders[i].status}</td>
                 </tr>
             );
         }
@@ -69,7 +89,6 @@ class Order extends Component {
       }
 
     render() {
-        console.log("result", this.state.past);
         let flag = localStorage.getItem("authLogin");
         let redirectVar = null;
         if (flag !== "true") {
@@ -92,7 +111,9 @@ class Order extends Component {
                             <thead>
                                 <tr>
                                     <th>Restaurant</th>
-                                    <th>items</th>
+                                    <th>item</th>
+                                    <th>quantity</th>
+                                    <th>price</th>
                                     <th>status</th>
                                 </tr>
                             </thead>

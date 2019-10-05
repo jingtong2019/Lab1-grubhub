@@ -72,7 +72,7 @@ class Detail extends Component {
             this.setState({add_error: true});
         }
         else {
-            let cur = this.state.item.mid.toString() + "," 
+            let cur = this.state.item.mid.toString() + "," + this.state.item.name.toString() + "," 
                 + this.state.item_quantity.toString() + "," + this.state.item.price.toString() + ";";
         
             localStorage.setItem("cart", cart+cur);

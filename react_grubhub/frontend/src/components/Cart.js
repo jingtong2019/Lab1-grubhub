@@ -49,7 +49,7 @@ class Cart extends Component {
             if (j !== i) {
                 temp.push(this.state.item_list[j]);
                 number += 1;
-                newcart += this.state.item_list[j].mid.toString() + "," 
+                newcart += this.state.item_list[j].mid.toString() + "," + this.state.item_list[j].name.toString() + ","
                 + this.state.item_list[j].quantity.toString() + "," + this.state.item_list[j].price.toString() + ";";
             }
         }

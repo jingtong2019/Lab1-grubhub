@@ -129,10 +129,10 @@ app.post('/getCart', function(req,res){
   for (let i=0; i < item_List.length-1; i++) {
     let item = item_List[i].split(/,/);
     if (item[0] in mycart) {
-      mycart[item[0]] += parseInt(item[1]);
+      mycart[item[0]] += parseInt(item[2]);
     }
     else {
-      mycart[item[0]] = parseInt(item[1]);
+      mycart[item[0]] = parseInt(item[2]);
     }
   }
   console.log("mycart", mycart);
