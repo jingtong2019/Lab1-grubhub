@@ -41,8 +41,9 @@ class Navbar extends Component {
                     {flag === "true" && <div className="topnav-right">
                     <ul class="nav navbar-nav">
                     {usertype === "customer" && <li><Link to="/account">Account</Link></li>}
+                    {usertype === "customer" && <li><Link to="/order">Orders</Link></li>}
                     {usertype === "owner" && <li><Link to="/oaccount">Account</Link></li>}
-                    {usertype === "customer" && <li class="nav-item"><a href="#">Cart</a></li>}
+                    {usertype === "customer" && <li><Link to="/cart">Cart</Link></li>}
                     {usertype === "owner" && <li><Link to="/menu">Menu</Link></li>}
                     <li onClick={this.onClick}><Link to="/">Logout</Link></li>
                     </ul>

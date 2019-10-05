@@ -13,6 +13,8 @@ import Home_for_Owner from './Home_for_Owner';
 import Account_for_Owner from './Account_for_Owner';
 import Menu from './Menu';
 import Detail from './Detail';
+import Cart from './Cart';
+import Order from './Order';
 
 //Create a Main Component
 class Main extends Component {
@@ -26,6 +28,8 @@ class Main extends Component {
                 <Route path="/home" component={Home}/>
                 <Route path="/search" component={Search}/>
                 <Route path="/detail" component={Detail}/>
+                <Route path="/cart" component={Cart}/>
+                <Route path="/order" component={Order}/>
                 <Route path="/ohome" component={Home_for_Owner}/>
                 <Route path="/oaccount" component={Account_for_Owner}/>
                 <Route path="/menu" component={Menu}/>

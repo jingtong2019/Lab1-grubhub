@@ -59,6 +59,127 @@ var pool = mysql.createPool({
 });
 
 
+app.post('/order', function(req,res){
+  let flag = "!";
+  if (req.body.past) {
+    flag = "";
+  }
+  let sql = "SELECT orders.items, orders.status, restaurants.rname FROM orders INNER JOIN restaurants ON orders.rid = restaurants.rid WHERE orders.cid = " 
+          + req.body.cid.toString() + " AND orders.status " + flag + "= \"delivered\";";
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+    connection.query(sql, function(err, result){
+      connection.release();
+      if (err) throw err;
+      if (err) {
+        res.writeHead(202,{
+          'Content-Type' : 'text/plain'
+        })
+        res.end("failed");
+      }
+      else {
+        res.writeHead(200,{
+          'Content-Type' : 'application/json'
+        })
+        let info = {
+          result: result,
+          number: result.length
+        };
+
+        res.end(JSON.stringify(info));
+      }
+    });
+  });
+})
+
+
+app.post('/place', function(req,res){
+  let sql = "INSERT INTO orders (rid, cid, status, items, cname, caddress) VALUES (" + req.body.rid + "," 
+        + req.body.cid + ",\"" + req.body.status + "\",\"" + req.body.items + "\",\"" + req.body.cname 
+        + "\",\"" + req.body.caddress + "\");";
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+          
+    connection.query(sql, function(err, result){
+      connection.release();
+      if (err) {
+        res.writeHead(202,{
+          'Content-Type' : 'text/plain'
+        })
+        res.end("failed");
+      }
+      else {
+        res.writeHead(200,{
+          'Content-Type' : 'text/plain'
+        })
+        res.end("success");
+      }
+    });
+  });
+})
+
+
+app.post('/getCart', function(req,res){
+  let cart = req.body.cart;
+  console.log("cart", cart);
+  let mycart = {};
+  let item_List = cart.split(/;/);
+  for (let i=0; i < item_List.length-1; i++) {
+    let item = item_List[i].split(/,/);
+    if (item[0] in mycart) {
+      mycart[item[0]] += parseInt(item[1]);
+    }
+    else {
+      mycart[item[0]] = parseInt(item[1]);
+    }
+  }
+  console.log("mycart", mycart);
+  let items = "(";
+  if (Object.keys(mycart).length === 0) {
+    items = "()";
+  }
+  else {
+    for (let key in mycart) {
+      items += key + ", ";
+    }
+    items = items.slice(0,-2) + ")";
+  }
+  
+  console.log("item", items);
+
+  let sql = "SELECT mid, name, price, menu_image FROM menus WHERE mid in " + items + ";";
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+    connection.query(sql, function(err, result){
+      if (err) {
+        res.writeHead(202,{
+          'Content-Type' : 'text/plain'
+        })
+        res.end("failed");
+      }
+      else {
+        for (let j=0; j< result.length; j++) {
+          const buf = new Buffer.from(result[j].menu_image, "binary");
+          let image = buf.toString('base64');
+          result[j].menu_image = image;
+          result[j].quantity = mycart[result[j].mid];
+        }
+        res.writeHead(200,{
+          'Content-Type' : 'application/json'
+        })
+        let info = {
+          item_list: result,
+          item_number: result.length
+        }
+        res.end(JSON.stringify(info));
+      }
+    });   
+  });
+})
+
 
 app.post('/detail', function(req,res){
   let rid = req.body.rid.toString();

@@ -25,6 +25,7 @@ class Home_for_Owner extends Component {
 
     getOrders = () => {
         let data = this.state;
+        axios.defaults.withCredentials = true;
         if (!data.show_no_delivered && !data.show_delivered) {
             this.setState({
                 orders: []
@@ -33,10 +34,13 @@ class Home_for_Owner extends Component {
         else {
             axios.post('http://localhost:3001/ohome', data)
                 .then((response) => {
-                //update the state with the response data
-                this.setState({
-                    orders: response.data
-                });
+                console.log("Status Code : ",response.status);
+                if(response.status === 200){
+                    //update the state with the response data
+                    this.setState({
+                        orders: response.data
+                    });
+                }
             });
         }
     }

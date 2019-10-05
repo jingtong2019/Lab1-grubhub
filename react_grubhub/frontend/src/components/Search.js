@@ -23,7 +23,6 @@ class Search extends Component {
             .then(response => {
                 console.log("Status Code : ",response.status);
                 if(response.status === 200){
-                    console.log("search success", response.data);
                     this.setState({
                         result_number: response.data[1],
                         result_list: response.data[0]
@@ -42,8 +41,9 @@ class Search extends Component {
         })
     }
     
-    onClick(rid) {
+    onClick(rid, rname) {
         localStorage.setItem("rid_visit", rid);
+        localStorage.setItem("rname_visit", rname);
     }
 
 
@@ -59,13 +59,12 @@ class Search extends Component {
         let table = [];
         
         for (let i=0; i< this.state.result_number; i++) {
-            console.log("test", this.state.cuisine_type, this.state.result_list[i].cuisine);
             if (this.state.cuisine_type === "All" || this.state.result_list[i].cuisine === this.state.cuisine_type) {
                 let children = [];
                 children.push(
                     <tr>
                         <td>{this.state.result_list[i].name}</td>
-                        <td><Link to="/detail" onClick={(e) => this.onClick(this.state.result_list[i].rid)}>{this.state.result_list[i].rname}</Link></td>
+                        <td><Link to="/detail" onClick={(e) => this.onClick(this.state.result_list[i].rid, this.state.result_list[i].rname)}>{this.state.result_list[i].rname}</Link></td>
                         <td>{this.state.result_list[i].cuisine}</td>
                     </tr>
                 );

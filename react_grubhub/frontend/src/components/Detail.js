@@ -1,23 +1,20 @@
 import React, {Component} from 'react';
 import {Redirect} from 'react-router';
 import axios from 'axios';
+import './Detail.css';
 
 
 class Detail extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            cid: localStorage.getItem('userid'),
             rid: localStorage.getItem('rid_visit'),
-            add_section: false,
-            add_item: false,
-            update_item: false,
-            same_section_name: false,
-            add_section_success: false,
-            add_item_success: false,
-            update_button: false,
-            update_same_section_name: false,
-            update_section_success: false,
-            update_item_success: false
+            rname: localStorage.getItem('rname_visit'),
+            ispopup: false,
+            add_error: false,
+            add_success: false,
+            valid_number: false
         };
     }
 
@@ -40,124 +37,61 @@ class Detail extends Component {
                     });
                 }
         })
+
     }
 
-
-    add_item(sid) {
-        this.setState({add_item: true});
-        this.setState({sid_to_add: sid});
-        //console.log("test2", this.state.sid_to_add);
+    openForm(item) {
+        this.setState({
+            ispopup: true,
+            item: item
+        });
+    }
+    
+    closeForm() {
+        this.setState({
+            ispopup: false,
+            add_error: false,
+            add_success: false,
+            valid_number: false
+        });
     }
 
-    update_item(pre_item_info) {
-        this.setState({update_item: true});
-        this.setState({pre_item_info: pre_item_info});
-    }
-
-    update_button(sid, sname) {
-        this.setState({update_button: true});
-        this.setState({sid_to_update: sid});
-        this.setState({pre_section_name: sname});
-        //console.log("test2", this.state.sid_to_add);
-    }
-
-    delete_section(sid) {
-        let data = {
-            rid: this.state.rid,
-            sid: sid
+    onSubmit = () => {
+        if (this.state.item_quantity <= 0 || !Number.isInteger(Number(this.state.item_quantity))) {
+            this.setState({valid_number: true});
+            return;
         }
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/deleteSection',data)
-            .then(response => {
-                console.log("Status Code : ",response.status);
-                if(response.status === 200){
-                    console.log("Delete successfully");
-                }
-        })
-    }
-
-    delete_item(mid) {
-        let data = {
-            mid: mid
+        let cart = localStorage.getItem("cart");
+        if (cart === null) {
+            localStorage.setItem("cart", "");
+            localStorage.setItem("rid_cart", this.state.rid);
         }
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/deleteItem',data)
-            .then(response => {
-                console.log("Status Code : ",response.status);
-                if(response.status === 200){
-                    console.log("Delete successfully");
-                }
-        })
-    }
-
-    saveItem = (e) => {
-        console.log("test2", this.state.sid_to_add);
-        e.preventDefault();
-        const data = new FormData();
-        data.append('myImage', this.state.item_image);
-        data.append('rid', this.state.rid);
-        data.append('name', this.state.item_name);
-        data.append('description', this.state.item_description);
-        data.append('price', this.state.item_price);
-        data.append('sid', this.state.sid_to_add);
-        const config = {
-            headers: {
-                'content-type': 'multipart/form-data'
-            }
-        };
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/addItem',data, config)
-            .then(response => {
-                console.log("Status Code : ",response.status);
-                //console.log("type",typeof(response.data));
-                if(response.status === 200){
-                    console.log("sign up successfully!");
-                    this.setState({add_item_success: true});
-                }
-        })
-    }
-
-    updateItem = (e) => {
-        e.preventDefault();
-        const data = new FormData();
-        data.append('myImage', this.state.item_image_update);
-        data.append('mid', this.state.pre_item_info.mid);
-        data.append('name', this.state.item_name_update);
-        data.append('description', this.state.item_description_update);
-        data.append('price', this.state.item_price_update);
-        const config = {
-            headers: {
-                'content-type': 'multipart/form-data'
-            }
-        };
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/updateItem',data, config)
-            .then(response => {
-                console.log("Status Code : ",response.status);
-                //console.log("type",typeof(response.data));
-                if(response.status === 200){
-                    console.log("update item successfully!");
-                    this.setState({update_item_success: true});
-                }
-        })
+        cart = localStorage.getItem("cart");
+        let rid_cart = localStorage.getItem("rid_cart");
+        if (cart !== "" && rid_cart !== this.state.rid) {
+            this.setState({add_error: true});
+        }
+        else {
+            let cur = this.state.item.mid.toString() + "," 
+                + this.state.item_quantity.toString() + "," + this.state.item.price.toString() + ";";
+        
+            localStorage.setItem("cart", cart+cur);
+            localStorage.setItem("rid_cart", this.state.rid);
+            this.setState({add_success: true});
+        }
+        
     }
 
 
     createTable = () => {
         let table = [];
+
         
         for (let i=0; i< this.state.section_number; i++) {
             let children = [];
             children.push(
                 <tr>
                     <td>{this.state.sname_list[i]}</td>
-                    <td><button onClick={() => this.add_item(this.state.sid_list[i])}>add item</button></td>
-                    <td><button onClick={() => this.update_button(this.state.sid_list[i], this.state.sname_list[i])}>update</button></td>
-                    <td><button onClick={() => this.delete_section(this.state.sid_list[i])}>delete</button></td>
                 </tr>
             );
             for (let j=0; j<this.state.menu_list[i].length; j++) {
@@ -165,12 +99,11 @@ class Detail extends Component {
                 
                 children.push(
                     <tr>
-                    <td><img src={image} height="100" width="100"></img></td>
+                    <td><img src={image} height="100" width="100" onClick={() => this.openForm(this.state.menu_list[i][j])}></img></td>
                     <td>{this.state.menu_list[i][j].name}</td>
                     <td>{this.state.menu_list[i][j].description}</td>
                     <td>{this.state.menu_list[i][j].price}</td>
-                    <td><button onClick={() => this.update_item(this.state.menu_list[i][j])}>update</button></td>
-                    <td><button onClick={() => this.delete_item(this.state.menu_list[i][j].mid)}>delete</button></td>
+
                     </tr>
                 );
 
@@ -182,81 +115,11 @@ class Detail extends Component {
         
       }
 
-    openForm() {
-        this.setState({add_section: true});
-    }
-
-    closeForm() {
-        this.setState({add_section: false});
-        this.setState({same_section_name: false});
-        this.setState({add_section_success: false});
-    }
-
-    closeAddItem() {
-        this.setState({add_item: false});
-        this.setState({add_item_success: false});
-    }
-
-    closeUpdateItem() {
-        this.setState({update_item: false});
-        this.setState({update_item_success: false});
-    }
-
-    closeUpdateSection() {
-        this.setState({update_button: false});
-    }
-
-    saveSection = (e) => {
-        e.preventDefault();
-        const data = {
-            userid: this.state.userid,
-            section_name: this.state.section_name,
-            rid: this.state.rid
-        };
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/addSection',data)
-            .then(response => {
-                console.log("Status Code : ",response.status);
-                //console.log("type",typeof(response.data));
-                if(response.status === 200){
-                    console.log("add section successfully");
-                    this.setState({same_section_name: false});
-                    this.setState({add_section_success: true});
-                }
-                else if (response.status === 203) {
-                    this.setState({same_section_name: true});
-                    this.setState({add_section_success: false});
-                }
-        })
-    }
-
-    updateSection = (e) => {
-        e.preventDefault();
-        const data = {
-            update_section_name: this.state.update_section_name,
-            rid: this.state.rid,
-            sid: this.state.sid_to_update
-        };
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/updateSection',data)
-            .then(response => {
-                console.log("Status Code : ",response.status);
-                //console.log("type",typeof(response.data));
-                if(response.status === 200){
-                    console.log("update section successfully");
-                    this.setState({update_same_section_name: false});
-                    this.setState({update_section_success: true});
-                }
-                else if (response.status === 203) {
-                    this.setState({update_same_section_name: true});
-                    this.setState({update_section_success: false});
-                }
-        })
-    }
 
     render() {
+        //localStorage.setItem("cart", "");
+        let cart = localStorage.getItem("cart");
+        console.log("testtest", cart);
         
         let flag = localStorage.getItem("authLogin");
         console.log(flag);
@@ -269,51 +132,35 @@ class Detail extends Component {
         return (
             <div>
                 {redirectVar}
+                <h1>{this.state.rname}</h1>
+
+                {this.state.ispopup === true &&
                 <div>
-                <button type="button" onClick={() => this.openForm()}>Add section</button>
-                {this.state.add_section === true && <form>
-                    <input type="text" placeholder="Enter section name" onChange={e=>this.setState({section_name:e.target.value})} required/>
-                    <button type="submit" onClick={this.saveSection}>Save</button>
-                    <button type="button" onClick={() => this.closeForm()}>Close</button>
-                    {this.state.same_section_name === true && <div>{"Section name already exist"}</div>}
-                    {this.state.add_section_success === true && <div>{"Section added successfully"}</div>}
-                </form>}
+                <input type="number" min="1" step="1" defaultValue="0" onChange={(e) => this.setState({item_quantity: e.target.value, add_error:false, add_success:false, valid_number: false})}/>
+                <button type="button" onClick={() => this.onSubmit()}>Add to cart</button>
+                <button type="button" onClick={() => this.closeForm()}>Close</button>
                 </div>
-                
-                {this.state.add_item === true && <form onSubmit={this.saveItem}>
-                    <input type="text" placeholder="Enter item name" onChange={e=>this.setState({item_name:e.target.value})} required/>
-                    <input type="text" placeholder="Enter item description" onChange={e=>this.setState({item_description:e.target.value})} required/>
-                    <input type="number" step="0.01" placeholder="Enter price" onChange={e=>this.setState({item_price:e.target.value})} required/>
-                    <input name = "myImage" type="file" onChange={e=>this.setState({item_image:e.target.files[0]})} required/>
-                    <input type="submit" value="Add" />
-                    <button type="button" onClick={() => this.closeAddItem()}>Close</button>
-                    {this.state.add_item_success === true && <div>{"Item added successfully"}</div>}
-                </form>}
-
-
-                {this.state.update_button === true && <form>
-                    <input type="text" placeholder="Enter section name" defaultValue={this.state.pre_section_name} onChange={e=>this.setState({update_section_name:e.target.value})} required/>
-                    <button type="submit" onClick={this.updateSection}>Update</button>
-                    <button type="button" onClick={() => this.closeUpdateSection()}>Close</button>
-                    {this.state.update_same_section_name === true && <div>{"Section name already exist"}</div>}
-                    {this.state.update_section_success === true && <div>{"Section updated successfully"}</div>}
-                </form>}
-
-                {this.state.update_item === true && <form onSubmit={this.updateItem}>
-                    <input type="text" placeholder="Enter item name" defaultValue={this.state.pre_item_info.name} onChange={e=>this.setState({item_name_update:e.target.value})} required/>
-                    <input type="text" placeholder="Enter item description" defaultValue={this.state.pre_item_info.description} onChange={e=>this.setState({item_description_update:e.target.value})} required/>
-                    <input type="number" step="0.01" placeholder="Enter price" defaultValue={this.state.pre_item_info.price} onChange={e=>this.setState({item_price_update:e.target.value})} required/>
-                    <input name = "myImage" type="file" onChange={e=>this.setState({item_image_update:e.target.files[0]})} required/>
-                    <input type="submit" value="Update" />
-                    <button type="button" onClick={() => this.closeUpdateItem()}>Close</button>
-                    {this.state.update_item_success === true && <div>{"Item updated successfully"}</div>}
-                </form>}
-
+                }
+                {this.state.add_error === true && <div>{"Can not add this item to cart, there are other restaurant's items in cart."}</div>}
+                {this.state.add_success === true && <div>{"Item added to cart"}</div>}
+                {this.state.valid_number === true && <div>{"Enter a valid integer number"}</div>}
                 <table>
-                    {this.createTable()}
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.createTable()}
+                    </tbody>
                 </table>
 
+                
 
+                
 
             </div>
         );
