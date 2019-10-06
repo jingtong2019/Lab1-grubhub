@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {Redirect} from 'react-router';
 import './Home.css';
 import axios from 'axios';
+import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
+import ToggleButton from 'react-bootstrap/ToggleButton';
 
 
 class Home_for_Owner extends Component {
@@ -9,14 +11,8 @@ class Home_for_Owner extends Component {
         super(props);
         this.state = {
             userid: localStorage.getItem('userid'),
-            orders: [],
-            show_no_delivered: true,
-            show_delivered: false
+            past: false
         };
-        // this.boxChange = this.boxChange.bind(this);
-        // this.cancel_order = this.cancel_order.bind(this);
-        // this.getOrders = this.getOrders.bind(this);
-        // this.change_status = this.change_status.bind(this);
     }
 
     componentDidMount(){
@@ -24,29 +20,37 @@ class Home_for_Owner extends Component {
     }
 
     getOrders = () => {
-        let data = this.state;
+        let data = {
+            userid: this.state.userid,
+            past: this.state.past
+        };
         axios.defaults.withCredentials = true;
-        if (!data.show_no_delivered && !data.show_delivered) {
-            this.setState({
-                orders: []
-            });
-        }
-        else {
-            axios.post('http://localhost:3001/ohome', data)
-                .then((response) => {
-                console.log("Status Code : ",response.status);
-                if(response.status === 200){
-                    //update the state with the response data
-                    this.setState({
-                        orders: response.data
-                    });
-                }
-            });
-        }
+
+        axios.post('http://localhost:3001/ohome', data)
+            .then((response) => {
+            console.log("Status Code : ",response.status);
+            if(response.status === 200){
+                console.log("result: ",response.data.result);
+                this.setState({
+                    orders: response.data.result,
+                    number: response.data.number
+                });
+            }
+        });
+
+    }
+
+    upcome = () => {
+        this.setState({past: false});
+        this.getOrders();
+    }
+
+    past = () => {
+        this.setState({past: true});
+        this.getOrders();
     }
 
     cancel_order(id) {
-        console.log("id", id);
         let data = {order_id: id};
         axios.defaults.withCredentials = true;
         //make a post request with the user data
@@ -56,17 +60,7 @@ class Home_for_Owner extends Component {
                 //console.log("type",typeof(response.data));
                 if(response.status === 200){
                     console.log("Cancel order successfully");
-                    let newstate = this.state.orders;
-                    let i;
-                    for (i=0; i< newstate.length; i++) {
-                        if (newstate[i].order_id === id) {
-                            newstate.splice(i);
-                            break;
-                        }
-                    }
-                    this.setState({
-                        orders: newstate
-                    })
+                    this.getOrders();
                 }
         })
     }
@@ -87,29 +81,40 @@ class Home_for_Owner extends Component {
         })
     }
 
-    boxChange(whichone, curstatus) {
-        //e.preventDefault();
-        console.log(curstatus);
-        if (whichone) {this.setState({show_no_delivered: curstatus}, this.getOrders);}
-        else {this.setState({show_delivered: curstatus}, this.getOrders);}
-
+    helper(i) {
+        let s = this.state.orders[i].items;
+        let item_list = s.split(/;/);
+        //console.log("test", item_list);
+        let children = [];
+        for (let i=0; i < item_list.length-1; i++) {
+            let item = item_list[i].split(/,/);
+            //console.log("item", item);
+            children.push(
+                <tr>
+                    <td>{item[1]}</td>
+                    <td>{item[2]}</td>
+                    <td>{item[3]}</td>
+                </tr>
+            );
+        }
+        return children;
     }
 
+    createTable = () => {
+        let table = [];
+        for (let i=0; i< this.state.number; i++) {
 
-
-    render() {
-        let flag = localStorage.getItem("authLogin");
-        let redirectVar = null;
-        if (flag !== "true") {
-            console.log("!flag:", !flag);
-            redirectVar = <Redirect to= "/"/>
-        }
-
-        let details = this.state.orders.map(order => {
-            return(
+            let order = this.state.orders[i];
+            table.push(
                 <tr>
-                    <td>{order.order_id}</td>
-                    <td>{order.items}</td>
+                    <td>{i+1}</td>
+                    <td>
+                        <table>
+                        <tbody>
+                        {this.helper(i)}
+                        </tbody>
+                        </table>
+                    </td>
                     <td>{order.cname}</td>
                     <td>{order.caddress}</td>
                     <td>
@@ -124,25 +129,34 @@ class Home_for_Owner extends Component {
                     <td><button onClick={() => this.cancel_order(order.order_id)}>cancel</button></td>
                     
                 </tr>
-            )
-        })
+            );
+            
+        }
+        return table;
+      }
 
-        //console.log("details:", details);
+
+    render() {
+        let flag = localStorage.getItem("authLogin");
+        let redirectVar = null;
+        if (flag !== "true") {
+            console.log("!flag:", !flag);
+            redirectVar = <Redirect to= "/"/>
+        }
 
         return(
             <div>
                 {redirectVar}
                 <div>
-                    <h2>List of All Orders</h2>
-                        <div>
-                        <input type="checkbox" onChange={(e) => this.boxChange(true, e.target.checked)} defaultChecked={true}/>Orders not delivered
-                        <input type="checkbox" onChange={(e) => this.boxChange(false, e.target.checked)}/>Orders delivered
+                        <ToggleButtonGroup type="radio" name="options" defaultValue={1}>
+                            <ToggleButton value={1} onClick={this.upcome}>Upcoming orders</ToggleButton>
+                            <ToggleButton value={2} onClick={this.past}>Past orders</ToggleButton>
+                        </ToggleButtonGroup>
                         
-                        </div>
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>order_id</th>
+                                    <th>No.</th>
                                     <th>items</th>
                                     <th>cname</th>
                                     <th>caddress</th>
@@ -151,8 +165,7 @@ class Home_for_Owner extends Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {/*Display the Tbale row based on data recieved*/}
-                                {details}
+                                {this.createTable()}
                                 
                             </tbody>
                         </table>

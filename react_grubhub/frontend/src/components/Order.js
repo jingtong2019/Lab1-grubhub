@@ -72,13 +72,14 @@ class Order extends Component {
     createTable = () => {
         let table = [];
         for (let i=0; i< this.state.number; i++) {
-            
             table.push(
                 <tr>
                 <td>{this.state.orders[i].rname}</td>
                 <td>
                     <table>
-                    <tbody>{this.helper(i)}</tbody>
+                    <tbody>
+                    {this.helper(i)}
+                    </tbody>
                     </table>
                 </td>
                 <td>{this.state.orders[i].status}</td>
@@ -100,8 +101,6 @@ class Order extends Component {
             <div>
                 {redirectVar}
                 <div>
-                    <h2>List of All Orders</h2>
-
                         <ToggleButtonGroup type="radio" name="options" defaultValue={1}>
                         <ToggleButton value={1} onClick={this.upcome}>Upcoming orders</ToggleButton>
                         <ToggleButton value={2} onClick={this.past}>Past orders</ToggleButton>
@@ -112,8 +111,8 @@ class Order extends Component {
                                 <tr>
                                     <th>Restaurant</th>
                                     <th>item</th>
-                                    <th>quantity</th>
-                                    <th>price</th>
+                                    {/* <th>quantity</th>
+                                    <th>price</th> */}
                                     <th>status</th>
                                 </tr>
                             </thead>

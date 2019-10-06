@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import {Link} from 'react-router-dom';
 import {StyledLink} from './Signup';
 import {connect} from 'react-redux';
+import axios from 'axios';
 import {setLoginError, setLoginPending, setLoginSuccess} from '../redux_files/reducer/index';
 import './Navbar.css';
 
@@ -18,11 +19,32 @@ class Navbar extends Component {
         this.props.logout();
         localStorage.setItem("authLogin", "false");
     }
+
+    componentDidMount(){
+        let data = {
+            userid: localStorage.getItem("userid"),
+            usertype: localStorage.getItem("usertype")
+        }
+        console.log(localStorage.getItem("userid"), localStorage.getItem("usertype"));
+        axios.defaults.withCredentials = true;
+        //make a post request with the user data
+        axios.post('http://localhost:3001/getName',data)
+            .then(response => {
+                console.log("Status Code : ",response.status);
+                if(response.status === 200){
+                    console.log("name: ",response.data);
+                    this.setState({
+                        username: response.data
+                    });
+                }
+        })
+    }
     
     render(){
         let flag = localStorage.getItem("authLogin");
         let usertype = localStorage.getItem("usertype");
-        console.log("navbar:", localStorage.getItem("usertype"));
+
+        console.log("navbar:", localStorage.getItem("userid"));
         return(
             <div>
             <head>
@@ -40,9 +62,9 @@ class Navbar extends Component {
                     </div>
                     {flag === "true" && <div className="topnav-right">
                     <ul class="nav navbar-nav">
-                    {usertype === "customer" && <li><Link to="/account">Account</Link></li>}
+                    {usertype === "customer" && <li><Link to="/account">{this.state.username}</Link></li>}
                     {usertype === "customer" && <li><Link to="/order">Orders</Link></li>}
-                    {usertype === "owner" && <li><Link to="/oaccount">Account</Link></li>}
+                    {usertype === "owner" && <li><Link to="/oaccount">{this.state.username}</Link></li>}
                     {usertype === "customer" && <li><Link to="/cart">Cart</Link></li>}
                     {usertype === "owner" && <li><Link to="/menu">Menu</Link></li>}
                     <li onClick={this.onClick}><Link to="/">Logout</Link></li>

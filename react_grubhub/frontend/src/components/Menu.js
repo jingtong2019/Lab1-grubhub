@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Redirect} from 'react-router';
 import axios from 'axios';
-import testimage from '../images/default_profile.jpeg';
 
 
 class Menu extends Component {

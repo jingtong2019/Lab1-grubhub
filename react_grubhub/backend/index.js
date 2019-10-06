@@ -542,48 +542,35 @@ app.post('/updateSection', function(req,res){
 })
 
 app.post('/ohome', function(req,res){
-  console.log("req.body.userid", req.body.userid);
-  let rid;
-  let sql1 = "SELECT rid FROM restaurants WHERE oid = " + req.body.userid.toString() + ";";
-  
+  let flag = "!";
+  if (req.body.past) {
+    flag = "";
+  }
+  let sql = "SELECT orders.items, orders.status, orders.order_id, orders.cname, orders.caddress FROM orders INNER JOIN restaurants ON orders.rid = restaurants.rid WHERE restaurants.oid = " 
+          + req.body.userid.toString() + " AND orders.status " + flag + "= \"delivered\";";
   pool.getConnection(function(err,connection){
     if (err) throw err;
     console.log('connected as id ' + connection.threadId);
-    connection.query(sql1, function(err, result){
-        if (err) {
-          res.writeHead(202,{
-            'Content-Type' : 'text/plain'
-          })
-          res.end("failed");
-        }
-        else {
-          //console.log("reuslt: ", result[0]);
-          rid = result[0].rid;
-          let sql2 = "SELECT order_id, cid, status, items, cname, caddress FROM orders WHERE rid = " + rid.toString() + ";";
-          if (req.body.show_no_delivered && !req.body.show_delivered) {
-            sql2 = "SELECT order_id, cid, status, items, cname, caddress FROM orders WHERE rid = " + rid.toString() 
-              + " AND status != \"delivered\";";
-          }
-          else if (!req.body.show_no_delivered && req.body.show_delivered) {
-            sql2 = "SELECT order_id, cid, status, items, cname, caddress FROM orders WHERE rid = " + rid.toString() 
-              + " AND status = \"delivered\";";
-          }
-          connection.query(sql2, function(err, info){
-            connection.release();
-            if (err) {
-              res.writeHead(202,{
-                'Content-Type' : 'text/plain'
-              })
-              res.end("failed");
-            }
-            else {
-                  res.writeHead(200,{
-                    'Content-Type' : 'application/json'
-              })
-              res.end(JSON.stringify(info));
-            }
-          });
-        }
+    connection.query(sql, function(err, result){
+      connection.release();
+      if (err) throw err;
+      if (err) {
+        res.writeHead(202,{
+          'Content-Type' : 'text/plain'
+        })
+        res.end("failed");
+      }
+      else {
+        res.writeHead(200,{
+          'Content-Type' : 'application/json'
+        })
+        let info = {
+          result: result,
+          number: result.length
+        };
+
+        res.end(JSON.stringify(info));
+      }
     });
   });
 })
@@ -825,7 +812,36 @@ app.post('/account3', upload.single('myImage'), (req, res) => {
   });
 });
 
-
+app.post('/getName', function(req,res){
+  console.log(req.body.usertype, req.body.userid);
+  let idtype = "cid";
+  let type = "customers";
+  if (req.body.usertype === "owner") {
+    type = "owners";
+    idtype = "oid";
+  }
+  let sql = "SELECT fname FROM " + type + " WHERE " + idtype + " = " + req.body.userid + ";";
+  pool.getConnection(function(err,connection){
+    if (err) throw err;
+    console.log('connected as id ' + connection.threadId);
+    connection.query(sql, function(err, result){
+      connection.release();
+        if (err) {
+          res.writeHead(202,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end("failed");
+        }
+        else {
+          console.log(result);
+          res.writeHead(200,{
+            'Content-Type' : 'text/plain'
+          })
+          res.end(result[0].fname);
+        }
+    });
+  });
+})
 
 app.post('/account1', function(req,res){
   console.log("req.body.userid", req.body.userid);

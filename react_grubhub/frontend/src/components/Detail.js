@@ -37,7 +37,6 @@ class Detail extends Component {
                     });
                 }
         })
-
     }
 
     openForm(item) {

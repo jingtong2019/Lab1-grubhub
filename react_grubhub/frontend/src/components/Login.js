@@ -19,7 +19,6 @@ class Login extends Component {
         e.preventDefault();
         let data = this.state;
         this.props.loginFunc(data);
-        console.log("finished?");
     }
     
 
@@ -31,7 +30,6 @@ class Login extends Component {
         
         let redirectVar = null;
         if (isLoginSuccess) {
-            localStorage.setItem("usertype", this.state.usertype);
             redirectVar = <Redirect to= "/home"/>
             //console.log("usertype", this.state.usertype);
             localStorage.setItem("usertype", "customer");
@@ -76,13 +74,10 @@ class Login extends Component {
     
 
 function loginFunc(data) {
-    console.log("isisisiisisisi???");
     return dispatch => {
         dispatch(setLoginPending(true));
         dispatch(setLoginSuccess(false));
         dispatch(setLoginError(false));
-
-        console.log("data", data);
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
@@ -90,10 +85,9 @@ function loginFunc(data) {
             .then(response => {
                 console.log("Status Code : ",response.status);
                 if (response.status === 200) {
+                    localStorage.setItem("userid", response.data);
                     dispatch(setLoginPending(false));
                     dispatch(setLoginSuccess(true));
-                    console.log("response:", response.data);
-                    localStorage.setItem("userid", response.data);
                 } 
                 else {
                     dispatch(setLoginPending(false));
