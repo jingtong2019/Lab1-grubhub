@@ -10,7 +10,9 @@ import './Navbar.css';
 class Navbar extends Component {
     constructor(props){
         super(props);
-        this.state = {};
+        this.state = {
+            username: "Account"
+        };
         //this.handleLogout = this.handleLogout.bind(this);
     }
 
@@ -18,26 +20,6 @@ class Navbar extends Component {
         e.preventDefault();
         this.props.logout();
         localStorage.setItem("authLogin", "false");
-    }
-
-    componentDidMount(){
-        let data = {
-            userid: localStorage.getItem("userid"),
-            usertype: localStorage.getItem("usertype")
-        }
-        console.log(localStorage.getItem("userid"), localStorage.getItem("usertype"));
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/getName',data)
-            .then(response => {
-                console.log("Status Code : ",response.status);
-                if(response.status === 200){
-                    console.log("name: ",response.data);
-                    this.setState({
-                        username: response.data
-                    });
-                }
-        })
     }
     
     render(){
@@ -62,9 +44,9 @@ class Navbar extends Component {
                     </div>
                     {flag === "true" && <div className="topnav-right">
                     <ul class="nav navbar-nav">
-                    {usertype === "customer" && <li><Link to="/account">{this.state.username}</Link></li>}
+                    {usertype === "customer" && <li><Link to="/account">{localStorage.getItem("fname")}</Link></li>}
                     {usertype === "customer" && <li><Link to="/order">Orders</Link></li>}
-                    {usertype === "owner" && <li><Link to="/oaccount">{this.state.username}</Link></li>}
+                    {usertype === "owner" && <li><Link to="/oaccount">{localStorage.getItem("fname")}</Link></li>}
                     {usertype === "customer" && <li><Link to="/cart">Cart</Link></li>}
                     {usertype === "owner" && <li><Link to="/menu">Menu</Link></li>}
                     <li onClick={this.onClick}><Link to="/">Logout</Link></li>

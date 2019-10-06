@@ -7,6 +7,7 @@ var cookieParser = require('cookie-parser');
 var cors = require('cors');
 var path = require('path');
 var multer = require('multer');
+var passwordHash = require('password-hash');
 
 var app = express();
 var storage = multer.diskStorage({
@@ -812,36 +813,6 @@ app.post('/account3', upload.single('myImage'), (req, res) => {
   });
 });
 
-app.post('/getName', function(req,res){
-  console.log(req.body.usertype, req.body.userid);
-  let idtype = "cid";
-  let type = "customers";
-  if (req.body.usertype === "owner") {
-    type = "owners";
-    idtype = "oid";
-  }
-  let sql = "SELECT fname FROM " + type + " WHERE " + idtype + " = " + req.body.userid + ";";
-  pool.getConnection(function(err,connection){
-    if (err) throw err;
-    console.log('connected as id ' + connection.threadId);
-    connection.query(sql, function(err, result){
-      connection.release();
-        if (err) {
-          res.writeHead(202,{
-            'Content-Type' : 'text/plain'
-          })
-          res.end("failed");
-        }
-        else {
-          console.log(result);
-          res.writeHead(200,{
-            'Content-Type' : 'text/plain'
-          })
-          res.end(result[0].fname);
-        }
-    });
-  });
-})
 
 app.post('/account1', function(req,res){
   console.log("req.body.userid", req.body.userid);
@@ -913,9 +884,9 @@ app.post('/account2', function(req,res){
 
 
 app.post('/csignup', function(req,res){
-  //let sql = "INSERT INTO customers (email, password, fname, lname) VALUES ?; SELECT cid FROM customers WHERE email = " + req.body.email + ";";
+  let hashedPassword = passwordHash.generate(req.body.password);
   let sql = "INSERT INTO customers (email, password, fname, lname) VALUES ?;";
-  let values = [[req.body.email, req.body.password, req.body.fname, req.body.lname]];
+  let values = [[req.body.email, hashedPassword, req.body.fname, req.body.lname]];
 
   pool.getConnection(function(err,connection){
     if (err) throw err;
@@ -951,8 +922,9 @@ app.post('/csignup', function(req,res){
 })
 
 app.post('/osignup', function(req,res){
+  let hashedPassword = passwordHash.generate(req.body.password);
   let sql = "INSERT INTO owners (email, password, fname, lname, rname, zipcode) VALUES ?;";
-  let values = [[req.body.email, req.body.password, req.body.fname, req.body.lname, req.body.rname, req.body.zipcode]];
+  let values = [[req.body.email, hashedPassword, req.body.fname, req.body.lname, req.body.rname, req.body.zipcode]];
 
   pool.getConnection(function(err,connection){
     if (err) throw err;
@@ -1026,7 +998,7 @@ app.post('/', function(req,res){
     usertype = "owners";
     idtype = "oid";
   }
-  let sql = "SELECT " + idtype + ", password FROM " + usertype + " WHERE email = ?;";
+  let sql = "SELECT " + idtype + ", fname, password FROM " + usertype + " WHERE email = ?;";
   let values = req.body.email;
 
   pool.getConnection(function(err,connection){
@@ -1041,12 +1013,26 @@ app.post('/', function(req,res){
           })
           res.end("This email is not registered.");
         }
-        else if (result[0].password === req.body.password) {
+        else if (passwordHash.verify(req.body.password, result[0].password)) {
           res.writeHead(200,{
-            'Content-Type' : 'text/plain'
+            'Content-Type' : 'application/json'
           })
-          if (idtype == "cid") res.end((result[0].cid).toString());
-          else res.end((result[0].oid).toString());
+          let info = {
+            fname: result[0].fname
+          };
+          if (idtype == "cid") {
+            info = {
+              ...info,
+              userid: (result[0].cid).toString()
+            }
+          }
+          else {
+            info = {
+              ...info,
+              userid: (result[0].oid).toString()
+            }
+          }
+          res.end(JSON.stringify(info));
         }
         else {
           res.writeHead(203,{

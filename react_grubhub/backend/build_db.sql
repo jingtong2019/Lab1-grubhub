@@ -32,7 +32,7 @@ CREATE TABLE restaurants
   cuisine VARCHAR(255) DEFAULT "",
   restaurant_image MEDIUMBLOB,
   PRIMARY KEY (rid),
-  FOREIGN KEY (oid) REFERENCES owners(oid)
+  FOREIGN KEY (oid) REFERENCES owners(oid) ON DELETE CASCADE
 );
 
 CREATE TABLE orders 
@@ -44,8 +44,8 @@ CREATE TABLE orders
   cname VARCHAR(255) NOT NULL,
   caddress VARCHAR(255) NOT NULL,
   PRIMARY KEY (order_id),
-  FOREIGN KEY (rid) REFERENCES restaurants(rid),
-  FOREIGN KEY (cid) REFERENCES customers(cid)
+  FOREIGN KEY (rid) REFERENCES restaurants(rid) ON DELETE CASCADE,
+  FOREIGN KEY (cid) REFERENCES customers(cid) ON DELETE CASCADE
 );
 
 CREATE TABLE sections 
@@ -53,7 +53,7 @@ CREATE TABLE sections
   rid int NOT NULL,
   sname VARCHAR(255) NOT NULL,
   PRIMARY KEY (sid),
-  FOREIGN KEY (rid) REFERENCES restaurants(rid)
+  FOREIGN KEY (rid) REFERENCES restaurants(rid) ON DELETE CASCADE
 );
 
 
@@ -66,7 +66,7 @@ CREATE TABLE menus
   price FLOAT NOT NULL,
   menu_image MEDIUMBLOB,
   PRIMARY KEY (mid),
-  FOREIGN KEY (rid) REFERENCES restaurants(rid),
+  FOREIGN KEY (rid) REFERENCES restaurants(rid) ON DELETE CASCADE,
   FOREIGN KEY (sid) REFERENCES sections(sid) ON DELETE CASCADE
 );
 
