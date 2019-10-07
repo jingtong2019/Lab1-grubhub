@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Redirect} from 'react-router';
 import axios from 'axios';
+import './Order.css';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 
@@ -55,6 +56,7 @@ class Order extends Component {
         let item_list = s.split(/;/);
         //console.log("test", item_list);
         let children = [];
+
         for (let i=0; i < item_list.length-1; i++) {
             let item = item_list[i].split(/,/);
             //console.log("item", item);
@@ -72,19 +74,43 @@ class Order extends Component {
     createTable = () => {
         let table = [];
         for (let i=0; i< this.state.number; i++) {
-            table.push(
-                <tr>
-                <td>{this.state.orders[i].rname}</td>
-                <td>
-                    <table>
-                    <tbody>
-                    {this.helper(i)}
-                    </tbody>
-                    </table>
-                </td>
-                <td>{this.state.orders[i].status}</td>
-                </tr>
-            );
+            if (i === 0) {
+                table.push(
+                    <tr>
+                    <td>{this.state.orders[i].rname}</td>
+                    <td>
+                        <table class="table" className="innertable">
+                        <thead>
+                            <tr>
+                                <th>name</th>
+                                <th>quantity</th>
+                                <th>price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {this.helper(i)}
+                        </tbody>
+                        </table>
+                    </td>
+                    <td>{this.state.orders[i].status}</td>
+                    </tr>
+                );
+            }
+            else {
+                table.push(
+                    <tr>
+                    <td>{this.state.orders[i].rname}</td>
+                    <td>
+                        <table class="table">
+                        <tbody>
+                        {this.helper(i)}
+                        </tbody>
+                        </table>
+                    </td>
+                    <td>{this.state.orders[i].status}</td>
+                    </tr>
+                );
+            }
         }
         return table;
       }

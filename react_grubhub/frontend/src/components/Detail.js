@@ -84,7 +84,14 @@ class Detail extends Component {
 
     createTable = () => {
         let table = [];
-
+        table.push(
+            <tr>
+                <td>Image</td>
+                <td>Name</td>
+                <td>Description</td>
+                <td>Price</td>
+            </tr>
+        );
         
         for (let i=0; i< this.state.section_number; i++) {
             let children = [];
@@ -98,11 +105,11 @@ class Detail extends Component {
                 
                 children.push(
                     <tr>
-                    <td><img src={image} height="100" width="100" onClick={() => this.openForm(this.state.menu_list[i][j])}></img></td>
+                    <td><img src={image} height="100" width="100"></img></td>
                     <td>{this.state.menu_list[i][j].name}</td>
                     <td>{this.state.menu_list[i][j].description}</td>
                     <td>{this.state.menu_list[i][j].price}</td>
-
+                    <td><button onClick={() => this.openForm(this.state.menu_list[i][j])}>Add</button></td>
                     </tr>
                 );
 
@@ -133,9 +140,12 @@ class Detail extends Component {
                 {redirectVar}
                 <h1>{this.state.rname}</h1>
 
+                <div className="quantity_section">
                 {this.state.ispopup === true &&
                 <div>
+                <label>Quantity: </label>
                 <input type="number" min="1" step="1" defaultValue="0" onChange={(e) => this.setState({item_quantity: e.target.value, add_error:false, add_success:false, valid_number: false})}/>
+                <br/>
                 <button type="button" onClick={() => this.onSubmit()}>Add to cart</button>
                 <button type="button" onClick={() => this.closeForm()}>Close</button>
                 </div>
@@ -143,19 +153,13 @@ class Detail extends Component {
                 {this.state.add_error === true && <div>{"Can not add this item to cart, there are other restaurant's items in cart."}</div>}
                 {this.state.add_success === true && <div>{"Item added to cart"}</div>}
                 {this.state.valid_number === true && <div>{"Enter a valid integer number"}</div>}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Price</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.createTable()}
-                    </tbody>
+                </div>
+
+                <div className="detail_result">
+                <table class = "table">
+                    {this.createTable()}
                 </table>
+                </div>
 
                 
 

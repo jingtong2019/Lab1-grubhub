@@ -71,8 +71,8 @@ function csignupToHome(data) {
                 if(response.status === 200){
                     console.log("sign up successfully!");
                     localStorage.setItem("authLogin", "true");
-                    console.log("cresponse", response.data);
-                    localStorage.setItem("userid", response.data);
+                    localStorage.setItem("userid", response.data.cid);
+                    localStorage.setItem("fname", response.data.fname);
                     dispatch(setLoginPending(false));
                     dispatch(setLoginSuccess(true));
                 }

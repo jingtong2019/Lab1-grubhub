@@ -132,9 +132,7 @@ class Account_for_Owner extends Component {
             <div>
                 {redirectVar}
                 <div className="account_container">
-                    <br/><br/>
-                    <h4 className="h4_style">Your account</h4>
-                    <div className="account_container">
+                    <div>
                     
                     <img src={this.state.profile_image} height="100" width="100"></img>
 

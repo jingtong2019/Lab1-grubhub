@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Redirect} from 'react-router';
 import axios from 'axios';
+import './Cart.css';
 
 
 class Cart extends Component {
@@ -12,7 +13,10 @@ class Cart extends Component {
             rname: localStorage.getItem('rname_visit'),
             openform: false,
             order_success: false,
-            item_number: 0
+            item_number: 0,
+            place_empty: false,
+            name: "",
+            address: ""
         };
     }
 
@@ -66,11 +70,18 @@ class Cart extends Component {
     }
 
     closeForm() {
-        this.setState({openform: false});
-        this.setState({order_success: false});
+        this.setState({
+            openform: false,
+            order_success: false,
+            place_empty: false
+        });
     }
 
     place() {
+        if (this.state.name === "" || this.state.address === "") {
+            this.setState({place_empty: true});
+            return;
+        }
         let data = {
           rid: this.state.rid,
           cid: this.state.cid,
@@ -101,6 +112,14 @@ class Cart extends Component {
 
     createTable = () => {
         let table = [];
+        table.push(
+            <tr>
+                <td>Image</td>
+                <td>Name</td>
+                <td>Price</td>
+                <td>Quantity</td>
+            </tr>
+        );
         for (let i=0; i< this.state.item_number; i++) {
             console.log("image", this.state.item_list[i]);
             let image = "data:image/jpeg;base64," + this.state.item_list[i].menu_image;
@@ -134,34 +153,32 @@ class Cart extends Component {
                 {this.state.item_number !== 0 &&
                 <div>
                     <h1>Your cart</h1>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Image</th>
-                                <th>Name</th>
-                                <th>Price</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {this.createTable()}
-                        </tbody>
-                    </table>
-                <div><label>Your balance: </label> {this.state.total}</div>
-                <button onClick={() => this.openForm()}>Checkout</button>
-                </div>
-                }
+                    <div className="cart_result">
+                        <table class="table">
+                                {this.createTable()}
+                        </table>
+                    </div>
+                
+                    <div className="place_section">
+                    <div><label>Your balance: </label> {this.state.total}</div>
+                    <button onClick={() => this.openForm()}>Checkout</button>
+                    
+                    
+                    {this.state.openform === true && this.state.item_number !== 0 &&
+                    <div>
+                        <input type="text" placeholder="Your name" onChange={(e)=>this.setState({name: e.target.value, order_success:false})} required/>
+                        <input type="text" placeholder="Your address" onChange={(e)=>this.setState({address: e.target.value, order_success:false})} required/>
+                        <button type="submit" onClick={() => this.place()}>Place order</button>
+                        <button onClick={() => this.closeForm()}>Close</button>
+                        {this.state.place_empty === true && <div>{"Please enter your name and address"}</div>}
+
+                    </div>
+                    }
+                    </div>
+
+                </div>}
                 {this.state.order_success === true && <div>{"Your order is placed successfully!"}</div>}
                 {this.state.item_number === 0 && <div>{"Your cart is empty now"}</div>}
-
-                {this.state.openform === true && this.state.item_number !== 0 &&
-                <div>
-                    <input type="text" placeholder="Your name" onChange={(e)=>this.setState({name: e.target.value, order_success:false})} required/>
-                    <input type="text" placeholder="Your address" onChange={(e)=>this.setState({address: e.target.value, order_success:false})} required/>
-                    <button onClick={() => this.place()}>Place order</button>
-                    <button onClick={() => this.closeForm()}>Close</button>
-                </div>
-                }
 
             </div>
         );

@@ -63,7 +63,6 @@ class OwnerSignup extends Component {
 }
 
 function osignupToHome(data) {
-    console.log("isisisiisisisi???");
     return dispatch => {
         dispatch(setLoginPending(true));
         dispatch(setLoginSuccess(false));
@@ -82,7 +81,6 @@ function osignupToHome(data) {
                     dispatch(setLoginSuccess(true));
                 }
                 else {
-                    console.log("wrong???");
                     dispatch(setLoginPending(false));
                     dispatch(setLoginError(true));
                     dispatch(setSignupError(true));

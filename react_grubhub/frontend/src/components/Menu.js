@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Redirect} from 'react-router';
 import axios from 'axios';
+import './Menu.css';
 
 
 class Menu extends Component {
@@ -45,21 +46,34 @@ class Menu extends Component {
 
 
     add_item(sid) {
-        this.setState({add_item: true});
-        this.setState({sid_to_add: sid});
-        //console.log("test2", this.state.sid_to_add);
+        this.setState({
+            add_item: true,
+            sid_to_add: sid,
+            add_section: false,
+            update_item: false,
+            update_button: false
+        });
     }
 
     update_item(pre_item_info) {
-        this.setState({update_item: true});
-        this.setState({pre_item_info: pre_item_info});
+        this.setState({
+            update_item: true,
+            pre_item_info: pre_item_info,
+            add_section: false,
+            add_item: false,
+            update_button: false
+        });
     }
 
     update_button(sid, sname) {
-        this.setState({update_button: true});
-        this.setState({sid_to_update: sid});
-        this.setState({pre_section_name: sname});
-        //console.log("test2", this.state.sid_to_add);
+        this.setState({
+            update_button: true,
+            sid_to_update: sid,
+            pre_section_name: sname,
+            add_item: false,
+            add_section: false,
+            update_item: false
+        });
     }
 
     delete_section(sid) {
@@ -153,6 +167,7 @@ class Menu extends Component {
         
         for (let i=0; i< this.state.section_number; i++) {
             let children = [];
+            
             children.push(
                 <tr>
                     <td>{this.state.sname_list[i]}</td>
@@ -161,7 +176,18 @@ class Menu extends Component {
                     <td><button onClick={() => this.delete_section(this.state.sid_list[i])}>delete</button></td>
                 </tr>
             );
+            
             for (let j=0; j<this.state.menu_list[i].length; j++) {
+                if (j === 0) {
+                    children.push(
+                        <tr>
+                            <td>Image</td>
+                            <td>Item name</td>
+                            <td>Description</td>
+                            <td>Price</td>
+                        </tr>
+                    );
+                }
                 let image = "data:image/jpeg;base64," + this.state.menu_list[i][j].menu_image;
                 
                 children.push(
@@ -184,23 +210,34 @@ class Menu extends Component {
       }
 
     openForm() {
-        this.setState({add_section: true});
+        this.setState({
+            add_section: true,
+            add_item: false,
+            update_item: false,
+            update_button: false
+        });
     }
 
     closeForm() {
-        this.setState({add_section: false});
-        this.setState({same_section_name: false});
-        this.setState({add_section_success: false});
+        this.setState({
+            add_section: false,
+            same_section_name: false,
+            add_section_success: false
+        });
     }
 
     closeAddItem() {
-        this.setState({add_item: false});
-        this.setState({add_item_success: false});
+        this.setState({
+            add_item: false,
+            add_item_success: false
+        });
     }
 
     closeUpdateItem() {
-        this.setState({update_item: false});
-        this.setState({update_item_success: false});
+        this.setState({
+            update_item: false,
+            update_item_success: false
+        });
     }
 
     closeUpdateSection() {
@@ -271,7 +308,15 @@ class Menu extends Component {
             <div>
                 {redirectVar}
                 <div>
-                <button type="button" onClick={() => this.openForm()}>Add section</button>
+                    <div className="button_part">
+                        <button type="button" onClick={() => this.openForm()}>Add section</button>
+                    </div>
+                    <div className="table_part">
+                        <table class="table">
+                            {this.createTable()}
+                        </table>
+                    </div>
+                <div className="add_section">
                 {this.state.add_section === true && <form>
                     <input type="text" placeholder="Enter section name" onChange={e=>this.setState({section_name:e.target.value})} required/>
                     <button type="submit" onClick={this.saveSection}>Save</button>
@@ -279,18 +324,20 @@ class Menu extends Component {
                     {this.state.same_section_name === true && <div>{"Section name already exist"}</div>}
                     {this.state.add_section_success === true && <div>{"Section added successfully"}</div>}
                 </form>}
-                </div>
-                
+
                 {this.state.add_item === true && <form onSubmit={this.saveItem}>
+
                     <input type="text" placeholder="Enter item name" onChange={e=>this.setState({item_name:e.target.value})} required/>
+                    <br/>
                     <input type="text" placeholder="Enter item description" onChange={e=>this.setState({item_description:e.target.value})} required/>
+                    <br/>
                     <input type="number" step="0.01" placeholder="Enter price" onChange={e=>this.setState({item_price:e.target.value})} required/>
+                    <br/>
                     <input name = "myImage" type="file" onChange={e=>this.setState({item_image:e.target.files[0]})} required/>
                     <input type="submit" value="Add" />
                     <button type="button" onClick={() => this.closeAddItem()}>Close</button>
                     {this.state.add_item_success === true && <div>{"Item added successfully"}</div>}
                 </form>}
-
 
                 {this.state.update_button === true && <form>
                     <input type="text" placeholder="Enter section name" defaultValue={this.state.pre_section_name} onChange={e=>this.setState({update_section_name:e.target.value})} required/>
@@ -309,10 +356,10 @@ class Menu extends Component {
                     <button type="button" onClick={() => this.closeUpdateItem()}>Close</button>
                     {this.state.update_item_success === true && <div>{"Item updated successfully"}</div>}
                 </form>}
-
-                <table>
-                    {this.createTable()}
-                </table>
+                </div>
+                
+                
+                </div>
 
 
 

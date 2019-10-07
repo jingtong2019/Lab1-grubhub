@@ -900,7 +900,7 @@ app.post('/csignup', function(req,res){
           res.end("failed");
         }
         else {
-          let sql2 = "SELECT cid FROM customers WHERE email = \"" + req.body.email + "\";";
+          let sql2 = "SELECT cid, fname FROM customers WHERE email = \"" + req.body.email + "\";";
           connection.query(sql2, function(err, result){
             connection.release();
             if (err) {
@@ -911,9 +911,10 @@ app.post('/csignup', function(req,res){
             }
             else {
               res.writeHead(200,{
-                'Content-Type' : 'text/plain'
+                'Content-Type' : 'application/json'
               })
-              res.end((result[0].cid).toString());
+              
+              res.end(JSON.stringify(result[0]));
             }
           });
         }
@@ -1051,5 +1052,5 @@ app.post('/', function(req,res){
 })
 
 //start your server on port 3001
-app.listen(3001);
+module.exports = app.listen(3001);
 console.log("Server Listening on port 3001");

@@ -46,7 +46,7 @@ class Navbar extends Component {
                     <ul class="nav navbar-nav">
                     {usertype === "customer" && <li><Link to="/account">{localStorage.getItem("fname")}</Link></li>}
                     {usertype === "customer" && <li><Link to="/order">Orders</Link></li>}
-                    {usertype === "owner" && <li><Link to="/oaccount">{localStorage.getItem("fname")}</Link></li>}
+                    {usertype === "owner" && <li><Link to="/oaccount">Account</Link></li>}
                     {usertype === "customer" && <li><Link to="/cart">Cart</Link></li>}
                     {usertype === "owner" && <li><Link to="/menu">Menu</Link></li>}
                     <li onClick={this.onClick}><Link to="/">Logout</Link></li>

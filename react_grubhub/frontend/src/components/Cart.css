@@ -1,4 +1,4 @@
-.detail_result {
+.cart_result {
     position: fixed;
     width: 60%;
     left: 50px;
@@ -7,7 +7,7 @@
   }
 
 
-  .quantity_section {
+  .place_section {
     /* display: none; */
     position: fixed;
     top: 100px;

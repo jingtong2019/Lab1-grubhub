@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Redirect} from 'react-router';
 import axios from 'axios';
+import './Search.css';
 import {Link} from 'react-router-dom';
 
 
@@ -57,7 +58,13 @@ class Search extends Component {
 
     createTable = () => {
         let table = [];
-        
+        table.push(
+            <tr>
+                <td>Item</td>
+                <td>Restaurant</td>
+                <td>Cuisine</td>
+            </tr>
+        );
         for (let i=0; i< this.state.result_number; i++) {
             if (this.state.cuisine_type === "All" || this.state.result_list[i].cuisine === this.state.cuisine_type) {
                 let children = [];
@@ -92,15 +99,17 @@ class Search extends Component {
                 <div className="home_container">
                     <h1 className="h1_style">We found these dishes for you</h1>
 
-                    <label>Choose cuisine type</label>
+                    <label className="h1_style">Choose cuisine type</label>
                     <select onChange={(e) => this.setState({cuisine_type: e.target.value})}>
                         <option value="All" selected>All</option>
                         {this.createSelect()}
                     </select>
 
-                    <table>
-                        {this.createTable()}
-                    </table>
+                    <div className="search_result">
+                        <table class="table">
+                            {this.createTable()}
+                        </table>
+                    </div>
                 </div>
             </div>
         );
