@@ -71,9 +71,4 @@ CREATE TABLE menus
 );
 
 
-INSERT INTO orders (rid, cid, status, items, cname, caddress)
-VALUES (7, 1, 'new', '1,2,3.4;2,5,12;', 'jing tong', '1458 blvd');
-
-INSERT INTO orders (rid, cid, status, items, cname, caddress)
-VALUES (7, 4, 'preparing', '1,2,3.4;2,5,12;', 'Jing Tong', '3707 blvd');
 

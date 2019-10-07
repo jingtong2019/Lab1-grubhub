@@ -86,6 +86,15 @@ class Home_for_Owner extends Component {
         let item_list = s.split(/;/);
         //console.log("test", item_list);
         let children = [];
+        if (i === 0) {
+            children.push(
+                <tr>
+                    <td>Item name</td>
+                    <td>Quantity</td>
+                    <td>Price</td>
+                </tr>
+            );
+        }
         for (let i=0; i < item_list.length-1; i++) {
             let item = item_list[i].split(/,/);
             //console.log("item", item);
@@ -102,17 +111,23 @@ class Home_for_Owner extends Component {
 
     createTable = () => {
         let table = [];
+        table.push(
+            <tr>
+                <td>No.</td>
+                <td>Items</td>
+                <td>Name</td>
+                <td>Address</td>
+                <td>Status</td>
+            </tr>
+        );
         for (let i=0; i< this.state.number; i++) {
-
             let order = this.state.orders[i];
             table.push(
                 <tr>
                     <td>{i+1}</td>
                     <td>
-                        <table>
-                        <tbody>
+                        <table class="table">
                         {this.helper(i)}
-                        </tbody>
                         </table>
                     </td>
                     <td>{order.cname}</td>
@@ -154,20 +169,8 @@ class Home_for_Owner extends Component {
                         </ToggleButtonGroup>
                         
                         <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>No.</th>
-                                    <th>items</th>
-                                    <th>cname</th>
-                                    <th>caddress</th>
-                                    <th>status</th>
-                                    <th>cancel order</th>
-                                </tr>
-                            </thead>
-                            <tbody>
                                 {this.createTable()}
                                 
-                            </tbody>
                         </table>
                 </div> 
             </div> 
