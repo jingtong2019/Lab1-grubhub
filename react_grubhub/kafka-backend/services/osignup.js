@@ -12,19 +12,18 @@ function handle_request(msg, callback){
         callback(err,response);
     } else {
         db.findUser({
-            usertype: "Customer",
+            usertype: "Restaurant Owner",
             email: msg.email
         }, function (res) {
             response.code = "202";
             response.value = "User already exist";
             callback(null, response);
         }, function (err) {
-            
-            db.createUser(msg, function (res) {
+            db.createUser({...msg, usertype: "Restaurant Owner"}, function (res) {
                 var user = {
                     id: res._id,
                     email: res.email,
-                    usertype: "Customer"
+                    usertype: "Restaurant Owner"
                 };
                 console.log('res ---------', res)
                 response.code = "200";
@@ -72,39 +71,5 @@ function handle_request(msg, callback){
 exports.handle_request = handle_request;
 
 
-
-
-
-
-
-// var MongoClient = require('mongodb').MongoClient;
-
-// function handle_request(msg, callback){
-//     var res = {};
-//     console.log("In handle request:"+ JSON.stringify(msg));
-//     // Connect to the db
-//     MongoClient.connect('mongodb://localhost/mydb', function(err, db) {
-//       if(err) {
-//         callback(null,"Cannot connect to db");
-//       }
-//       else {
-//         console.log('Connected to mongodb');
-//         customers = db.collection('customers');
-//         console.log("msg -------------", msg);
-//         var query = {'email' : msg.email, 'password': msg.password};
-//         customers.insert(query, {w:1}, function(err, result) {
-//             if(err){
-//                 //throw err;
-//                 callback(err,"Error");
-//             }
-//             else{
-//                 callback(null,"Success");
-//             }
-//         });
-//       }
-//     });
-// }
-
-// exports.handle_request = handle_request;
 
 

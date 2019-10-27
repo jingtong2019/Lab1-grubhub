@@ -11,7 +11,7 @@ class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isSignupClicked: false
+            usertype: "Customer"
         };
     }
 
@@ -84,7 +84,7 @@ function loginFunc(data) {
         //make a post request with the user data
         axios.post('http://localhost:3001/',data)
             .then(response => {
-                console.log("Status Code : ",response.status);
+                console.log("Status Code : ",response);
                 if (response.status === 200) {
                     localStorage.setItem("userid", response.data.userid);
                     localStorage.setItem("fname", response.data.fname);

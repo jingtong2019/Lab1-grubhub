@@ -10,3 +10,9 @@ db.customers.insert({
 
 
 db.customers.find({"email":"tongjing2014@gmail.com"}).pretty()
+db.customers.deleteMany({})
+db.customers.find()
+
+
+db.createCollection("owners")
+db.owners.find()

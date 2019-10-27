@@ -6,12 +6,9 @@ var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var passport = require('passport');
 var cors = require('cors');
-var port = 8080;
 var app = express();
-//var config = require('./config/settings');
-var jwt = require('jsonwebtoken');
-var crypt = require('./app/crypt');
-var db = require('./app/db');
+
+
 // Set up middleware
 var requireAuth = passport.authenticate('jwt', {session: false});
 
@@ -24,25 +21,19 @@ app.use(cors());
 // Log requests to console
 app.use(morgan('dev'));
 
-
-console.log("here");
 //require('./app/routes')(app);
 app.use(passport.initialize());
 
 // Bring in defined Passport Strategy
 require('./config/passport')(passport);
 
-
-
-
-
 var connection =  new require('./kafka/Connection');
-
 
 //topics files
 //var signin = require('./services/signin.js');
-var Books = require('./services/books.js');
+var Login = require('./services/login.js');
 var Csignup = require('./services/csignup.js');
+var Osignup = require('./services/osignup.js');
 
 function handleTopicRequest(topic_name,fname){
     //var topic_name = 'root_topic';
@@ -76,5 +67,6 @@ function handleTopicRequest(topic_name,fname){
 // Add your TOPICs here
 //first argument is topic name
 //second argument is a function that will handle this topic request
-handleTopicRequest("post_book",Books)
+handleTopicRequest("login",Login)
 handleTopicRequest("csignup",Csignup)
+handleTopicRequest("osignup",Osignup)
