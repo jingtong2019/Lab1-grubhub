@@ -1,0 +1,12 @@
+db.createCollection("customers", {autoIndexId : true})
+
+db.customers.insert({
+   email: 'tongjing2014@gmail.com', 
+   password: '1234',
+   fname: 'Jing',
+   lname: 'Tong',
+   phone: '4129535876'
+})
+
+
+db.customers.find({"email":"tongjing2014@gmail.com"}).pretty()

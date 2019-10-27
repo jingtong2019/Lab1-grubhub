@@ -29,8 +29,7 @@ class OwnerSignup2 extends Component {
                     console.log("sign up successfully!");
                     this.setState({flag:true})
                     console.log("userid", response.data);
-                    localStorage.setItem("userid", response.data.userid);
-                    localStorage.setItem("fname", response.data.fname);
+                    localStorage.setItem("userid", response.data);
                 }
         })
     }

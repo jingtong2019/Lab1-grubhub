@@ -20,8 +20,9 @@ class Home_for_Owner extends Component {
     }
 
     getOrders = () => {
+        console.log("testest",localStorage.getItem('userid'));
         let data = {
-            userid: this.state.userid,
+            userid: localStorage.getItem('userid'),
             past: this.state.past
         };
         axios.defaults.withCredentials = true;
@@ -141,7 +142,7 @@ class Home_for_Owner extends Component {
                         {order.status !== "delivered" && <option value="delivered">delivered</option>}
                         </select>
                     </td>
-                    <td><button onClick={() => this.cancel_order(order.order_id)}>cancel</button></td>
+                    {this.state.past === false && <td><button onClick={() => this.cancel_order(order.order_id)}>cancel</button></td>}
                     
                 </tr>
             );

@@ -23,6 +23,7 @@ class Menu extends Component {
     }
 
     componentDidMount(){
+        console.log("testuserid", this.state.userid);
         let data = {
             userid: this.state.userid
         }
@@ -246,8 +247,9 @@ class Menu extends Component {
 
     saveSection = (e) => {
         e.preventDefault();
+        console.log("test", this.state.rid);
         const data = {
-            userid: this.state.userid,
+            // userid: this.state.userid,
             section_name: this.state.section_name,
             rid: this.state.rid
         };
