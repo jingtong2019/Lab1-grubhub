@@ -2,11 +2,6 @@ var MongoClient = require('mongodb').MongoClient;
 var mydb;
 var config = require('../config/settings');
 var ObjectId = require('mongodb').ObjectID;
-var express = require('express')
-//var fs = require('fs-extra')
-var multer = require('multer')
-//var util = require('util')
-//var upload = multer({limits: {fileSize: 2000000 },dest:'/uploads/'}) 
 
 // Initialize connection once
 MongoClient.connect(config.mongodb, function(err, database) {

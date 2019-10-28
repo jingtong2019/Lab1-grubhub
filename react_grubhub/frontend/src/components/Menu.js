@@ -65,9 +65,10 @@ class Menu extends Component {
         });
     }
 
-    update_item(pre_item_info) {
+    update_item(pre_item_info, sid) {
         this.setState({
             update_item: true,
+            sid_to_update_menu: sid,
             pre_item_info: pre_item_info,
             add_section: false,
             add_item: false,
@@ -102,9 +103,10 @@ class Menu extends Component {
         })
     }
 
-    delete_item(mid) {
+    delete_item(mid, sid) {
         let data = {
-            mid: mid
+            mid: mid,
+            sid: sid
         }
         axios.defaults.withCredentials = true;
         //make a post request with the user data
@@ -139,7 +141,7 @@ class Menu extends Component {
                 console.log("Status Code : ",response.status);
                 //console.log("type",typeof(response.data));
                 if(response.status === 200){
-                    console.log("sign up successfully!");
+                    console.log("add item successfully!");
                     this.setState({add_item_success: true});
                 }
         })
@@ -150,6 +152,7 @@ class Menu extends Component {
         const data = new FormData();
         data.append('myImage', this.state.item_image_update);
         data.append('mid', this.state.pre_item_info.mid);
+        data.append('sid', this.state.sid_to_update_menu);
         data.append('name', this.state.item_name_update);
         data.append('description', this.state.item_description_update);
         data.append('price', this.state.item_price_update);
@@ -206,8 +209,8 @@ class Menu extends Component {
                     <td>{this.state.menu_list[i][j].name}</td>
                     <td>{this.state.menu_list[i][j].description}</td>
                     <td>{this.state.menu_list[i][j].price}</td>
-                    <td><button onClick={() => this.update_item(this.state.menu_list[i][j])}>update</button></td>
-                    <td><button onClick={() => this.delete_item(this.state.menu_list[i][j].mid)}>delete</button></td>
+                    <td><button onClick={() => this.update_item(this.state.menu_list[i][j], this.state.sid_list[i])}>update</button></td>
+                    <td><button onClick={() => this.delete_item(this.state.menu_list[i][j].mid, this.state.sid_list[i])}>delete</button></td>
                     </tr>
                 );
 
@@ -273,7 +276,7 @@ class Menu extends Component {
                     this.setState({same_section_name: false});
                     this.setState({add_section_success: true});
                 }
-                else if (response.status === 203) {
+                else if (response.status === 202) {
                     this.setState({same_section_name: true});
                     this.setState({add_section_success: false});
                 }
@@ -298,7 +301,7 @@ class Menu extends Component {
                     this.setState({update_same_section_name: false});
                     this.setState({update_section_success: true});
                 }
-                else if (response.status === 203) {
+                else if (response.status === 202) {
                     this.setState({update_same_section_name: true});
                     this.setState({update_section_success: false});
                 }

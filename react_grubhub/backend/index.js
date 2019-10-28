@@ -10,7 +10,13 @@ var osignup = require('./routes/osignup');
 var osignup2 = require('./routes/osignup2');
 var menu = require('./routes/menu');
 var addSection = require('./routes/addSection');
+var updateSection = require('./routes/updateSection');
+var deleteSection = require('./routes/deleteSection');
+var addItem = require('./routes/addItem');
+var updateItem = require('./routes/updateItem');
+var deleteItem = require('./routes/deleteItem');
 var oaccount1 = require('./routes/oaccount1');
+var oaccount2 = require('./routes/oaccount2');
 var oaccount3 = require('./routes/oaccount3');
 
 //use cors to allow cross origin resource sharing
@@ -36,7 +42,13 @@ app.use("/osignup", osignup);
 app.use("/osignup2", osignup2);
 app.use("/menu", menu);
 app.use("/addSection", addSection);
+app.use("/updateSection", updateSection);
+app.use("/deleteSection", deleteSection);
+app.use("/addItem", addItem);
+app.use("/updateItem", updateItem);
+app.use("/deleteItem", deleteItem);
 app.use("/oaccount1", oaccount1);
+app.use("/oaccount2", oaccount2);
 app.use("/oaccount3", oaccount3);
 
 //start your server on port 3001

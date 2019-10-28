@@ -39,7 +39,12 @@ function handle_request(msg, callback){
                     for (let i=0; i< result.length; i++) {
                         sid_list.push(result[i]._id);
                         sname_list.push(result[i].sname);
-                        if ('menus' in result[i]) {
+                        if ('menus' in result[i] && result[i].menus.length != 0) {
+                            for (let j=0; j < result[i].menus.length; j++) {
+                                const buf = new Buffer.from(result[i].menus[j].menu_image, "binary");
+                                let image = buf.toString('base64');
+                                result[i].menus[j].menu_image = image;
+                            }
                             info.push(result[i].menus);
                         }
                         else {

@@ -37,7 +37,13 @@ var Osignup = require('./services/osignup.js');
 var Osignup2 = require('./services/osignup2.js');
 var Menu = require('./services/menu.js');
 var AddSection = require('./services/addSection.js');
+var UpdateSection = require('./services/updateSection.js');
+var DeleteSection = require('./services/deleteSection.js');
+var AddItem = require('./services/addItem.js');
+var UpdateItem = require('./services/updateItem.js');
+var DeleteItem = require('./services/deleteItem.js');
 var Oaccount1 = require('./services/oaccount1.js');
+var Oaccount2 = require('./services/oaccount2.js');
 var Oaccount3 = require('./services/oaccount3.js');
 
 function handleTopicRequest(topic_name,fname){
@@ -78,5 +84,11 @@ handleTopicRequest("osignup",Osignup)
 handleTopicRequest("osignup2",Osignup2)
 handleTopicRequest("menu",Menu)
 handleTopicRequest("addSection",AddSection)
+handleTopicRequest("updateSection",UpdateSection)
+handleTopicRequest("deleteSection",DeleteSection)
+handleTopicRequest("addItem",AddItem)
+handleTopicRequest("updateItem",UpdateItem)
+handleTopicRequest("deleteItem",DeleteItem)
 handleTopicRequest("oaccount1",Oaccount1)
+handleTopicRequest("oaccount2",Oaccount2)
 handleTopicRequest("oaccount3",Oaccount3)

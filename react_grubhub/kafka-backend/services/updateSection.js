@@ -1,6 +1,7 @@
 var MongoClient = require('mongodb').MongoClient;
 var mydb;
 var config = require('../config/settings');
+var ObjectId = require('mongodb').ObjectID;
 
 // Initialize connection once
 MongoClient.connect(config.mongodb, config.dbsetting, function(err, database) {
@@ -14,7 +15,7 @@ function handle_request(msg, callback){
     console.log("In handle request:"+ JSON.stringify(msg));
     let collection = mydb.collection('sections');
 
-    var query = {'rid' : msg.rid, 'sname': msg.section_name};
+    var query = {'rid' : msg.rid, 'sname': msg.update_section_name};
 
     collection.find(query).toArray(function(err,res){
         if (err) {
@@ -27,7 +28,8 @@ function handle_request(msg, callback){
             response.value = "This section already exists";
             callback(null,response);
         } else {
-            collection.insert(query, {w:1}, function(err, result) {
+            collection.update({ _id: ObjectId(msg.sid)},
+                { $set: { "sname": msg.update_section_name }}, function(err, result){
                 if(err){
                     console.log(err);
                     response.code = "202";
@@ -36,7 +38,7 @@ function handle_request(msg, callback){
                 }
                 else {
                     response.code = "200";
-                    response.value = "Successfully added this section";
+                    response.value = "Successfully updated this section";
                     callback(null,response);
                 }
             });
