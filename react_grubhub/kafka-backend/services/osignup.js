@@ -25,7 +25,6 @@ function handle_request(msg, callback){
                     email: res.email,
                     usertype: "Restaurant Owner"
                 };
-                console.log('res ---------', res)
                 response.code = "200";
                 response.value = "Successfully created new user";
                 var token = jwt.sign(user, config.secret, {
@@ -33,6 +32,7 @@ function handle_request(msg, callback){
                 });
                 response.token = 'JWT' + token;
                 response.userid = res._id;
+                //console.log('res ---------', response.userid)
                 response.fname = res.fname;
                 callback(null,response);
             }, function (err) {

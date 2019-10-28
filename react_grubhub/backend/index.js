@@ -8,7 +8,9 @@ var kafka = require('./kafka/client');
 var login = require('./routes/login');
 var csignup = require('./routes/csignup');
 var osignup = require('./routes/osignup');
-
+var osignup2 = require('./routes/osignup2');
+var menu = require('./routes/menu');
+var addSection = require('./routes/addSection');
 
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
@@ -27,8 +29,9 @@ app.use(function(req, res, next) {
 app.use("/", login);
 app.use("/csignup", csignup);
 app.use("/osignup", osignup);
-
-
+app.use("/osignup2", osignup2);
+app.use("/menu", menu);
+app.use("/addSection", addSection);
 
 
 

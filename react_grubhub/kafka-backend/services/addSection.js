@@ -1,0 +1,38 @@
+var MongoClient = require('mongodb').MongoClient;
+var mydb;
+var config = require('../config/settings');
+
+// Initialize connection once
+MongoClient.connect(config.mongodb, function(err, database) {
+  if(err) throw err;
+  mydb = database;
+});
+
+
+function handle_request(msg, callback){
+    var response = {};
+    console.log("In handle request:"+ JSON.stringify(msg));
+    let collection = mydb.collection('sections');
+
+    var query = {'rid' : msg.rid, 'sname': msg.section_name};
+    collection.insert(query, {w:1}, function(err, result) {
+        if(err){
+            console.log(err);
+            response.code = "202";
+            response.value = "Can not add this section";
+            callback(err,response);
+        }
+        else {
+            response.code = "200";
+            response.value = "Successfully added this section";
+            callback(null,response);
+        }
+    });
+
+}
+
+exports.handle_request = handle_request;
+
+
+
+

@@ -16,3 +16,5 @@ db.customers.find()
 
 db.createCollection("owners")
 db.owners.find()
+
+db.createCollection("restaurants")

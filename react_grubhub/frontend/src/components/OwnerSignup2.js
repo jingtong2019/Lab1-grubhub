@@ -11,7 +11,8 @@ class OwnerSignup2 extends Component {
             email: localStorage.getItem("email"),
             usertype: localStorage.getItem("usertype"),
             rname: localStorage.getItem("rname"),
-            flag: false
+            flag: false,
+            userid: localStorage.getItem('userid')
         };
     }
 
@@ -28,14 +29,13 @@ class OwnerSignup2 extends Component {
                 if(response.status === 200){
                     console.log("sign up successfully!");
                     this.setState({flag:true})
-                    console.log("userid", response.data);
-                    localStorage.setItem("userid", response.data);
+                    //console.log("userid", response.data);
+                    //localStorage.setItem("userid", response.data);
                 }
         })
     }
 
     render() {
-
         let redirectVar = null;
         if (this.state.flag) {
             localStorage.setItem("authLogin", "true");

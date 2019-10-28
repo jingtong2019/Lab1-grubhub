@@ -34,13 +34,17 @@ class Menu extends Component {
                 console.log("Status Code : ",response.status);
                 console.log("response", response.data);
                 if(response.status === 200){
+                    // this.setState({
+                    //     rid: response.data[3],
+                    //     sname_list: response.data[1],
+                    //     menu_list: response.data[2],
+                    //     sid_list: response.data[0],
+                    //     section_number: response.data[4]
+                    // });
                     this.setState({
-                        rid: response.data[3],
-                        sname_list: response.data[1],
-                        menu_list: response.data[2],
-                        sid_list: response.data[0],
-                        section_number: response.data[4]
+                        rid: response.data.rid
                     });
+                    console.log("rid ---------", response.data.rid);
                 }
         })
     }

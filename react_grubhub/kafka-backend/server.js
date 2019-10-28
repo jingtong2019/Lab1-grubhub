@@ -34,6 +34,9 @@ var connection =  new require('./kafka/Connection');
 var Login = require('./services/login.js');
 var Csignup = require('./services/csignup.js');
 var Osignup = require('./services/osignup.js');
+var Osignup2 = require('./services/osignup2.js');
+var Menu = require('./services/menu.js');
+var AddSection = require('./services/addSection.js');
 
 function handleTopicRequest(topic_name,fname){
     //var topic_name = 'root_topic';
@@ -70,3 +73,6 @@ function handleTopicRequest(topic_name,fname){
 handleTopicRequest("login",Login)
 handleTopicRequest("csignup",Csignup)
 handleTopicRequest("osignup",Osignup)
+handleTopicRequest("osignup2",Osignup2)
+handleTopicRequest("menu",Menu)
+handleTopicRequest("addSection",AddSection)

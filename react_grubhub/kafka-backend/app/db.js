@@ -1,14 +1,14 @@
 'use strict';
 //var mysql = require('mysql');
 var crypt = require('./crypt');
-//var config = require('../config/settings');
+var config = require('../config/settings');
 var db = {};
 // Creating a connection object for connecting to mysql database
 var MongoClient = require('mongodb').MongoClient;
 var mydb;
 
 // Initialize connection once
-MongoClient.connect('mongodb://localhost/mydb', function(err, database) {
+MongoClient.connect(config.mongodb, function(err, database) {
   if(err) throw err;
   mydb = database;
 });

@@ -77,6 +77,8 @@ function osignupToHome(data) {
                 //console.log("type",typeof(response.data));
                 if(response.status === 200){
                     console.log("sign up successfully!");
+                    localStorage.setItem("userid", response.data.userid);
+                    //console.log("userid ---------", response.data.userid);
                     dispatch(setLoginPending(false));
                     dispatch(setLoginSuccess(true));
                 }
