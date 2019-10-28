@@ -15,19 +15,35 @@ function handle_request(msg, callback){
     let collection = mydb.collection('sections');
 
     var query = {'rid' : msg.rid, 'sname': msg.section_name};
-    collection.insert(query, {w:1}, function(err, result) {
-        if(err){
-            console.log(err);
+
+    collection.find(query).toArray(function(err,res){
+        if (err) {
             response.code = "202";
-            response.value = "Can not add this section";
+            response.value = "Can not find this section";
             callback(err,response);
         }
-        else {
-            response.code = "200";
-            response.value = "Successfully added this section";
+        else if (res.length > 0) {
+            response.code = "203";
+            response.value = "This section already exists";
             callback(null,response);
+        } else {
+            collection.insert(query, {w:1}, function(err, result) {
+                if(err){
+                    console.log(err);
+                    response.code = "202";
+                    response.value = "Can not add this section";
+                    callback(err,response);
+                }
+                else {
+                    response.code = "200";
+                    response.value = "Successfully added this section";
+                    callback(null,response);
+                }
+            });
         }
     });
+
+    
 
 }
 

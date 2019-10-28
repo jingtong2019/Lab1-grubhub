@@ -42,9 +42,14 @@ class Menu extends Component {
                     //     section_number: response.data[4]
                     // });
                     this.setState({
-                        rid: response.data.rid
+                        rid: response.data.rid,
+                        sname_list: response.data.sname_list,
+                        sid_list: response.data.sid_list,
+                        menu_list: response.data.info,
+                        section_number: response.data.section_number
                     });
-                    console.log("rid ---------", response.data.rid);
+                    console.log("sname_list ---------", response.data.sname_list);
+                    console.log("menu_list ---------", response.data.info);
                 }
         })
     }

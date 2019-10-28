@@ -11,7 +11,8 @@ class Account_for_Owner extends Component {
         this.state = {
             updated_status: 0,
             profile_image: testimage,
-            restaurant_image: testimage
+            restaurant_image: testimage,
+            userid: localStorage.getItem("userid")
         };
     }
 
@@ -93,7 +94,7 @@ class Account_for_Owner extends Component {
                 console.log("Status Code : ",response.status);
                 //console.log("type",typeof(response.data));
                 if(response.status === 200){
-                    console.log("sign up successfully!");
+                    console.log("update image successfully!");
                 }
         })
     }

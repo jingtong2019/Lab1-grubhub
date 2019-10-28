@@ -18,3 +18,5 @@ db.createCollection("owners")
 db.owners.find()
 
 db.createCollection("restaurants")
+
+db.sections.find({"rid":"5db628b150bd27616d2fd90d"}).pretty()

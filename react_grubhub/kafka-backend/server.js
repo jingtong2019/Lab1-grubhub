@@ -37,6 +37,8 @@ var Osignup = require('./services/osignup.js');
 var Osignup2 = require('./services/osignup2.js');
 var Menu = require('./services/menu.js');
 var AddSection = require('./services/addSection.js');
+var Oaccount1 = require('./services/oaccount1.js');
+var Oaccount3 = require('./services/oaccount3.js');
 
 function handleTopicRequest(topic_name,fname){
     //var topic_name = 'root_topic';
@@ -76,3 +78,5 @@ handleTopicRequest("osignup",Osignup)
 handleTopicRequest("osignup2",Osignup2)
 handleTopicRequest("menu",Menu)
 handleTopicRequest("addSection",AddSection)
+handleTopicRequest("oaccount1",Oaccount1)
+handleTopicRequest("oaccount3",Oaccount3)
