@@ -16,7 +16,7 @@ const upload = multer({ storage });
 router.post('/', upload.single('myImage'), (req, res) => {
     let values = fs.readFileSync(req.file.path);
     req.body.image = values;
-    kafka.make_request('oaccount3',req.body, function(err,results){
+    kafka.make_request('account3',req.body, function(err,results){
         console.log('in result');
         console.log(results);
         if (err){

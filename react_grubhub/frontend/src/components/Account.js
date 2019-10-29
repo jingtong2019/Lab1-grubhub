@@ -30,6 +30,7 @@ class Account extends Component {
                         phone: response.data.phone,
                         userid: userid,
                     });
+                    localStorage.setItem("fname", response.data.fname);
                     if (response.data.image_result !== "no image") {
                         this.setState({profile_image: "data:image/jpeg;base64," + response.data.image_result});
                     }
@@ -39,7 +40,13 @@ class Account extends Component {
 
     onClick = (e) => {
         e.preventDefault();
-        const data = this.state;
+        const data = {
+            userid: this.state.userid,
+            fname: this.state.fname,
+            lname: this.state.lname,
+            email: this.state.email,
+            phone: this.state.phone
+        };
         axios.defaults.withCredentials = true;
         //make a post request with the user data
         axios.post('http://localhost:3001/account2',data)

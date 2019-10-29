@@ -19,6 +19,9 @@ var oaccount1 = require('./routes/oaccount1');
 var oaccount2 = require('./routes/oaccount2');
 var oaccount3 = require('./routes/oaccount3');
 var oaccount4 = require('./routes/oaccount4');
+var account1 = require('./routes/account1');
+var account2 = require('./routes/account2');
+var account3 = require('./routes/account3');
 
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
@@ -52,6 +55,9 @@ app.use("/oaccount1", oaccount1);
 app.use("/oaccount2", oaccount2);
 app.use("/oaccount3", oaccount3);
 app.use("/oaccount4", oaccount4);
+app.use("/account1", account1);
+app.use("/account2", account2);
+app.use("/account3", account3);
 
 //start your server on port 3001
 app.listen(3001);
