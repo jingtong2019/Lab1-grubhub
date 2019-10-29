@@ -45,6 +45,7 @@ var DeleteItem = require('./services/deleteItem.js');
 var Oaccount1 = require('./services/oaccount1.js');
 var Oaccount2 = require('./services/oaccount2.js');
 var Oaccount3 = require('./services/oaccount3.js');
+var Oaccount4 = require('./services/oaccount4.js');
 
 function handleTopicRequest(topic_name,fname){
     //var topic_name = 'root_topic';
@@ -92,3 +93,4 @@ handleTopicRequest("deleteItem",DeleteItem)
 handleTopicRequest("oaccount1",Oaccount1)
 handleTopicRequest("oaccount2",Oaccount2)
 handleTopicRequest("oaccount3",Oaccount3)
+handleTopicRequest("oaccount4",Oaccount4)

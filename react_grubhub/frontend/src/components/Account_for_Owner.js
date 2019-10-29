@@ -94,7 +94,7 @@ class Account_for_Owner extends Component {
                 console.log("Status Code : ",response.status);
                 //console.log("type",typeof(response.data));
                 if(response.status === 200){
-                    console.log("update image successfully!");
+                    console.log("update profile image successfully!");
                 }
         })
     }
@@ -116,7 +116,7 @@ class Account_for_Owner extends Component {
                 console.log("Status Code : ",response.status);
                 //console.log("type",typeof(response.data));
                 if(response.status === 200){
-                    console.log("sign up successfully!");
+                    console.log("update restaurant image successfully!");
                 }
         })
     }

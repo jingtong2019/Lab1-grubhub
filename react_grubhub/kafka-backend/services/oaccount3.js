@@ -4,7 +4,7 @@ var config = require('../config/settings');
 var ObjectId = require('mongodb').ObjectID;
 
 // Initialize connection once
-MongoClient.connect(config.mongodb, function(err, database) {
+MongoClient.connect(config.mongodb, config.dbsetting, function(err, database) {
   if(err) throw err;
   mydb = database;
 });
