@@ -1,6 +1,7 @@
 var MongoClient = require('mongodb').MongoClient;
 var mydb;
 var config = require('../config/settings');
+var ObjectId = require('mongodb').ObjectID;
 
 // Initialize connection once
 MongoClient.connect(config.mongodb, config.dbsetting, function(err, database) {
@@ -14,7 +15,7 @@ function handle_request(msg, callback){
     console.log("In handle request:"+ JSON.stringify(msg));
     let collection = mydb.collection('sections');
 
-    var query = {'rid' : msg.rid, 'sname': msg.section_name};
+    var query = {'rid' : ObjectId(msg.rid), 'sname': msg.section_name};
 
     collection.find(query).toArray(function(err,res){
         if (err) {

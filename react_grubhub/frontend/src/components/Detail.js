@@ -30,10 +30,10 @@ class Detail extends Component {
                 console.log("response", response.data);
                 if(response.status === 200){
                     this.setState({
-                        sname_list: response.data[1],
-                        menu_list: response.data[2],
-                        sid_list: response.data[0],
-                        section_number: response.data[3]
+                        sname_list: response.data.sname_list,
+                        sid_list: response.data.sid_list,
+                        menu_list: response.data.info,
+                        section_number: response.data.section_number
                     });
                 }
         })

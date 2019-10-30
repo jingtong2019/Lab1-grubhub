@@ -3,7 +3,7 @@ var mydb;
 var config = require('../config/settings');
 
 // Initialize connection once
-MongoClient.connect(config.mongodb, function(err, database) {
+MongoClient.connect(config.mongodb, config.dbsetting, function(err, database) {
   if(err) throw err;
   mydb = database;
 });

@@ -22,6 +22,9 @@ var oaccount4 = require('./routes/oaccount4');
 var account1 = require('./routes/account1');
 var account2 = require('./routes/account2');
 var account3 = require('./routes/account3');
+var search = require('./routes/search');
+var detail = require('./routes/detail');
+var getCart = require('./routes/getCart');
 
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
@@ -58,6 +61,9 @@ app.use("/oaccount4", oaccount4);
 app.use("/account1", account1);
 app.use("/account2", account2);
 app.use("/account3", account3);
+app.use("/search", search);
+app.use("/detail", detail);
+app.use("/getCart", getCart);
 
 //start your server on port 3001
 app.listen(3001);

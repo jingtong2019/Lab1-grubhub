@@ -49,6 +49,9 @@ var Oaccount4 = require('./services/oaccount4.js');
 var Account1 = require('./services/account1.js');
 var Account2 = require('./services/account2.js');
 var Account3 = require('./services/account3.js');
+var Search = require('./services/search.js');
+var Detail = require('./services/detail.js');
+var GetCart = require('./services/getCart.js');
 
 function handleTopicRequest(topic_name,fname){
     //var topic_name = 'root_topic';
@@ -100,3 +103,6 @@ handleTopicRequest("oaccount4",Oaccount4)
 handleTopicRequest("account1",Account1)
 handleTopicRequest("account2",Account2)
 handleTopicRequest("account3",Account3)
+handleTopicRequest("search",Search)
+handleTopicRequest("detail",Detail)
+handleTopicRequest("getCart",GetCart)

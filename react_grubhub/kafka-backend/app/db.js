@@ -8,7 +8,7 @@ var MongoClient = require('mongodb').MongoClient;
 var mydb;
 
 // Initialize connection once
-MongoClient.connect(config.mongodb, function(err, database) {
+MongoClient.connect(config.mongodb, config.dbsetting, function(err, database) {
   if(err) throw err;
   mydb = database;
 });

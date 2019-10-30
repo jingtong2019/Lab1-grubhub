@@ -25,13 +25,13 @@ class Search extends Component {
                 console.log("Status Code : ",response.status);
                 if(response.status === 200){
                     this.setState({
-                        result_number: response.data[1],
-                        result_list: response.data[0]
+                        result_number: response.data.number,
+                        result_list: response.data.info
                     })
 
                     let cuisine_list = [];
-                    for (let i=0; i<response.data[1]; i++) {
-                        let cur = response.data[0][i].cuisine;
+                    for (let i=0; i<response.data.number; i++) {
+                        let cur = response.data.info[i].cuisine;
                         if (cur !== "" && !cuisine_list.includes(cur)) {
                             cuisine_list.push(cur);
                         }

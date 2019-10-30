@@ -3,7 +3,7 @@ var mydb;
 var config = require('../config/settings');
 
 // Initialize connection once
-MongoClient.connect(config.mongodb, function(err, database) {
+MongoClient.connect(config.mongodb, config.dbsetting, function(err, database) {
   if(err) throw err;
   mydb = database;
 });
@@ -25,7 +25,7 @@ function handle_request(msg, callback){
             response.rid = result[0]._id;
             
             let sections = mydb.collection('sections');
-            let query2 = {'rid' : response.rid.toString()};
+            let query2 = {'rid' : response.rid};
             sections.find(query2).toArray(function(err,result){
                 if (err) {
                     response.code = "202";
