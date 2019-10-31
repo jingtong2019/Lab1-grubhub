@@ -10,20 +10,20 @@ class Order extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            cid: localStorage.getItem('userid'),
-            past: false
+            cid: localStorage.getItem('userid')
         };
     }
 
     componentDidMount(){
-        this.getOrders();
+        this.getOrders(false);
     }
 
 
-    getOrders = () => {
+    getOrders = (past) => {
+        //console.log("===============past:", past);
         let data = {
             cid: this.state.cid,
-            past: this.state.past
+            past: past
         };
         axios.defaults.withCredentials = true;
 
@@ -42,13 +42,11 @@ class Order extends Component {
     }
 
     upcome = () => {
-        this.setState({past: false});
-        this.getOrders();
+        this.getOrders(false);
     }
 
     past = () => {
-        this.setState({past: true});
-        this.getOrders();
+        this.getOrders(true);
     }
 
     helper(i) {

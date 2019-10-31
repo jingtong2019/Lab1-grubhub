@@ -52,6 +52,11 @@ var Account3 = require('./services/account3.js');
 var Search = require('./services/search.js');
 var Detail = require('./services/detail.js');
 var GetCart = require('./services/getCart.js');
+var Place = require('./services/place.js');
+var Order = require('./services/order.js');
+var Ohome = require('./services/ohome.js');
+var OhomeChange = require('./services/ohomeChange.js');
+var OhomeCancel = require('./services/ohomeCancel.js');
 
 function handleTopicRequest(topic_name,fname){
     //var topic_name = 'root_topic';
@@ -106,3 +111,8 @@ handleTopicRequest("account3",Account3)
 handleTopicRequest("search",Search)
 handleTopicRequest("detail",Detail)
 handleTopicRequest("getCart",GetCart)
+handleTopicRequest("place",Place)
+handleTopicRequest("order",Order)
+handleTopicRequest("ohome",Ohome)
+handleTopicRequest("ohomeChange",OhomeChange)
+handleTopicRequest("ohomeCancel",OhomeCancel)

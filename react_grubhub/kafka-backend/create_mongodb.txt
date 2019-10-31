@@ -26,7 +26,7 @@ db.sections.find({
     "menus.name" :  { $regex: /beef/ }
 }).pretty();
 
-db.sections.find( {}, { menus.mid: 1} )
+db.owners.find( {}, { "_id": 1, "email": 1} )
 
 
 db.items.insert([

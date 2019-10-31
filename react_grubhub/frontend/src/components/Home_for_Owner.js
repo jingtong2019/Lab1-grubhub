@@ -16,14 +16,14 @@ class Home_for_Owner extends Component {
     }
 
     componentDidMount(){
-        this.getOrders();
+        this.getOrders(false);
     }
 
-    getOrders = () => {
+    getOrders = (past) => {
         console.log("testest",localStorage.getItem('userid'));
         let data = {
             userid: localStorage.getItem('userid'),
-            past: this.state.past
+            past: past
         };
         axios.defaults.withCredentials = true;
 
@@ -42,13 +42,17 @@ class Home_for_Owner extends Component {
     }
 
     upcome = () => {
-        this.setState({past: false});
-        this.getOrders();
+        this.setState({
+            past: false
+        });
+        this.getOrders(false);
     }
 
     past = () => {
-        this.setState({past: true});
-        this.getOrders();
+        this.setState({
+            past: true
+        });
+        this.getOrders(true);
     }
 
     cancel_order(id) {
@@ -134,15 +138,16 @@ class Home_for_Owner extends Component {
                     <td>{order.cname}</td>
                     <td>{order.caddress}</td>
                     <td>
-                        <select onChange={(e) => this.change_status(order.order_id, e.target.value)}>
+                        <select onChange={(e) => this.change_status(order._id, e.target.value)}>
                         <option selected="selected">{order.status}</option>
                         {order.status !== "new" && <option value="new">new</option>}
                         {order.status !== "preparing" && <option value="preparing">preparing</option>}
                         {order.status !== "ready" && <option value="ready">ready</option>}
                         {order.status !== "delivered" && <option value="delivered">delivered</option>}
+                        {this.state.past === true && order.status !== "cancelled" && <option value="cancelled">cancelled</option>}
                         </select>
                     </td>
-                    {this.state.past === false && <td><button onClick={() => this.cancel_order(order.order_id)}>cancel</button></td>}
+                    {this.state.past === false && <td><button onClick={() => this.cancel_order(order._id)}>cancel</button></td>}
                     
                 </tr>
             );
