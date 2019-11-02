@@ -49,6 +49,8 @@ class Navbar extends Component {
                     {usertype === "owner" && <li><Link to="/oaccount">Account</Link></li>}
                     {usertype === "customer" && <li><Link to="/cart">Cart</Link></li>}
                     {usertype === "owner" && <li><Link to="/menu">Menu</Link></li>}
+                    {usertype === "customer" && <li><Link to="/cmessage">Messages</Link></li>}
+                    {usertype === "owner" && <li><Link to="/omessage">Messages</Link></li>}
                     <li onClick={this.onClick}><Link to="/">Logout</Link></li>
                     </ul>
                     </div>}

@@ -57,6 +57,9 @@ var Order = require('./services/order.js');
 var Ohome = require('./services/ohome.js');
 var OhomeChange = require('./services/ohomeChange.js');
 var OhomeCancel = require('./services/ohomeCancel.js');
+var Message = require('./services/message.js');
+var GetOmessage = require('./services/getOmessage.js');
+var GetCmessage = require('./services/getCmessage.js');
 
 function handleTopicRequest(topic_name,fname){
     //var topic_name = 'root_topic';
@@ -116,3 +119,6 @@ handleTopicRequest("order",Order)
 handleTopicRequest("ohome",Ohome)
 handleTopicRequest("ohomeChange",OhomeChange)
 handleTopicRequest("ohomeCancel",OhomeCancel)
+handleTopicRequest("message",Message)
+handleTopicRequest("getOmessage",GetOmessage)
+handleTopicRequest("getCmessage",GetCmessage)

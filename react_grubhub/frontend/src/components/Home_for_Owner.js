@@ -11,7 +11,9 @@ class Home_for_Owner extends Component {
         super(props);
         this.state = {
             userid: localStorage.getItem('userid'),
-            past: false
+            past: false,
+            openform: false,
+            sent_success: false
         };
     }
 
@@ -32,13 +34,55 @@ class Home_for_Owner extends Component {
             console.log("Status Code : ",response.status);
             if(response.status === 200){
                 console.log("result: ",response.data.result);
+                localStorage.setItem('rid', response.data.rid);
                 this.setState({
                     orders: response.data.result,
-                    number: response.data.number
+                    number: response.data.number,
+                    rid: response.data.rid,
+                    rname: response.data.rname
                 });
             }
         });
 
+    }
+
+    message() {
+        let data = {
+            rid: this.state.rid,
+            cid: this.state.cid_to_send,
+            message: this.state.message,
+            // cid to rid
+            ctor: false,
+            cname: this.state.cname_to_send,
+            rname: this.state.rname
+        };
+        axios.defaults.withCredentials = true;
+
+        axios.post('http://localhost:3001/message', data)
+            .then((response) => {
+            console.log("Status Code : ",response.status);
+            if(response.status === 200){
+                //update the state with the response data
+                console.log("Message sent successfully");
+                this.setState({sent_success: true});
+            }
+        });
+
+    }
+
+    openForm(cid, cname) {
+        this.setState({
+            openform: true,
+            cid_to_send: cid,
+            cname_to_send: cname
+        });
+    }
+
+    closeForm() {
+        this.setState({
+            openform: false,
+            sent_success: false
+        });
     }
 
     upcome = () => {
@@ -147,6 +191,7 @@ class Home_for_Owner extends Component {
                         {this.state.past === true && order.status !== "cancelled" && <option value="cancelled">cancelled</option>}
                         </select>
                     </td>
+                    <td><button onClick={() => this.openForm(this.state.orders[i].cid, this.state.orders[i].cname)}>message</button></td>
                     {this.state.past === false && <td><button onClick={() => this.cancel_order(order._id)}>cancel</button></td>}
                     
                 </tr>
@@ -173,7 +218,17 @@ class Home_for_Owner extends Component {
                             <ToggleButton value={1} onClick={this.upcome}>Upcoming orders</ToggleButton>
                             <ToggleButton value={2} onClick={this.past}>Past orders</ToggleButton>
                         </ToggleButtonGroup>
+
+                        {this.state.openform === true && this.state.item_number !== 0 &&
+                            <div>
+                                <input type="text" placeholder="Message" onChange={(e)=>this.setState({message: e.target.value})} required/>
+                                <button type="submit" onClick={() => this.message()}>Send</button>
+                                <button onClick={() => this.closeForm()}>Close</button>
+                                {this.state.sent_success === true && <div>{"Sent successfully"}</div>}
+                            </div>
                         
+                        }
+
                         <table class="table">
                                 {this.createTable()}
                                 

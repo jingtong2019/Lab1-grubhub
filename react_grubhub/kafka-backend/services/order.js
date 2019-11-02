@@ -47,6 +47,7 @@ function handle_request(msg, callback){
                 order.status = res[i].status;
                 order.items = res[i].items;
                 order.rname = res[i].newform[0].rname;
+                order.rid = res[i].rid;
                 info.push(order);
             }
 

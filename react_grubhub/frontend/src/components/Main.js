@@ -15,6 +15,8 @@ import Menu from './Menu';
 import Detail from './Detail';
 import Cart from './Cart';
 import Order from './Order';
+import Omessage from './Omessage';
+import Cmessage from './Cmessage';
 
 //Create a Main Component
 class Main extends Component {
@@ -37,7 +39,8 @@ class Main extends Component {
                 <Route path="/csignup" component={CustomerSignup}/>
                 <Route path="/osignup" component={OwnerSignup}/>
                 <Route path="/osignup2" component={OwnerSignup2}/>
-
+                <Route path="/cmessage" component={Cmessage}/>
+                <Route path="/omessage" component={Omessage}/>
             </div>
         );
     }

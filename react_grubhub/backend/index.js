@@ -30,6 +30,9 @@ var order = require('./routes/order');
 var ohome = require('./routes/ohome');
 var ohomeChange = require('./routes/ohomeChange');
 var ohomeCancel = require('./routes/ohomeCancel');
+var message = require('./routes/message');
+var getOmessage = require('./routes/getOmessage');
+var getCmessage = require('./routes/getCmessage');
 
 
 //use cors to allow cross origin resource sharing
@@ -75,6 +78,9 @@ app.use("/order", order);
 app.use("/ohome", ohome);
 app.use("/ohomeChange", ohomeChange);
 app.use("/ohomeCancel", ohomeCancel);
+app.use("/message", message);
+app.use("/getOmessage", getOmessage);
+app.use("/getCmessage", getCmessage);
 
 //start your server on port 3001
 app.listen(3001);

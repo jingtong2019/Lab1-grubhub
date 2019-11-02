@@ -10,7 +10,9 @@ class Order extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            cid: localStorage.getItem('userid')
+            cid: localStorage.getItem('userid'),
+            openform: false,
+            sent_success: false
         };
     }
 
@@ -39,6 +41,46 @@ class Order extends Component {
             }
         });
 
+    }
+
+    message() {
+        console.log("Click message: ", this.state.rid_to_send);
+        let data = {
+            cid: this.state.cid,
+            rid: this.state.rid_to_send,
+            message: this.state.message,
+            // cid to rid
+            ctor: true,
+            cname: localStorage.getItem('fname'),
+            rname: this.state.rname_to_send
+        };
+        axios.defaults.withCredentials = true;
+
+        axios.post('http://localhost:3001/message', data)
+            .then((response) => {
+            console.log("Status Code : ",response.status);
+            if(response.status === 200){
+                //update the state with the response data
+                console.log("Message sent successfully");
+                this.setState({sent_success: true});
+            }
+        });
+
+    }
+
+    openForm(rid, rname) {
+        this.setState({
+            openform: true,
+            rid_to_send: rid,
+            rname_to_send: rname
+        });
+    }
+
+    closeForm() {
+        this.setState({
+            openform: false,
+            sent_success: false
+        });
     }
 
     upcome = () => {
@@ -91,6 +133,7 @@ class Order extends Component {
                         </table>
                     </td>
                     <td>{this.state.orders[i].status}</td>
+                    <td><button onClick={() => this.openForm(this.state.orders[i].rid, this.state.orders[i].rname)}>message</button></td>
                     </tr>
                 );
             }
@@ -106,6 +149,7 @@ class Order extends Component {
                         </table>
                     </td>
                     <td>{this.state.orders[i].status}</td>
+                    <td><button onClick={() => this.openForm(this.state.orders[i].rid)}>message</button></td>
                     </tr>
                 );
             }
@@ -130,13 +174,20 @@ class Order extends Component {
                         <ToggleButton value={2} onClick={this.past}>Past orders</ToggleButton>
                         </ToggleButtonGroup>
 
+                        {this.state.openform === true && this.state.item_number !== 0 &&
+                            <div>
+                                <input type="text" placeholder="Message" onChange={(e)=>this.setState({message: e.target.value})} required/>
+                                <button type="submit" onClick={() => this.message()}>Send</button>
+                                <button onClick={() => this.closeForm()}>Close</button>
+                                {this.state.sent_success === true && <div>{"Sent successfully"}</div>}
+                            </div>
+                        }
+
                         <table class="table">
                             <thead>
                                 <tr>
                                     <th>Restaurant</th>
                                     <th>item</th>
-                                    {/* <th>quantity</th>
-                                    <th>price</th> */}
                                     <th>status</th>
                                 </tr>
                             </thead>
