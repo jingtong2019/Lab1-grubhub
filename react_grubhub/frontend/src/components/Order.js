@@ -4,6 +4,8 @@ import axios from 'axios';
 import './Order.css';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
+import { Card } from 'react-bootstrap';
+import Draggable from 'react-draggable';
 
 
 class Order extends Component {
@@ -111,51 +113,47 @@ class Order extends Component {
         return children;
     }
 
-    createTable = () => {
-        let table = [];
-        for (let i=0; i< this.state.number; i++) {
-            if (i === 0) {
-                table.push(
-                    <tr>
-                    <td>{this.state.orders[i].rname}</td>
-                    <td>
-                        <table class="table" className="innertable">
-                        <thead>
-                            <tr>
-                                <th>name</th>
-                                <th>quantity</th>
-                                <th>price</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {this.helper(i)}
-                        </tbody>
-                        </table>
-                    </td>
-                    <td>{this.state.orders[i].status}</td>
-                    <td><button onClick={() => this.openForm(this.state.orders[i].rid, this.state.orders[i].rname)}>message</button></td>
-                    </tr>
-                );
-            }
-            else {
-                table.push(
-                    <tr>
-                    <td>{this.state.orders[i].rname}</td>
-                    <td>
-                        <table class="table">
-                        <tbody>
-                        {this.helper(i)}
-                        </tbody>
-                        </table>
-                    </td>
-                    <td>{this.state.orders[i].status}</td>
-                    <td><button onClick={() => this.openForm(this.state.orders[i].rid)}>message</button></td>
-                    </tr>
-                );
-            }
+    getinfo(i) {
+        let s = this.state.orders[i].items;
+        let item_list = s.split(/;/);
+        let total = 0;
+        let order_info = "items: ";
+        for (let i=0; i < item_list.length-1; i++) {
+            let item = item_list[i].split(/,/);
+            //console.log("item", item);
+            order_info += item[1] + " * " + item[2] + "\n";
+            total += item[2] * item[3];
+            
         }
-        return table;
-      }
+        order_info += "price: " + total + "\nstatus: " + this.state.orders[i].status;
+
+        return order_info;
+    }
+
+    createCard = () => {
+        let card = [];
+        for (let i=0; i < this.state.number; i++) {
+            
+            card.push(
+                <Draggable>
+                        <div>
+                            <Card bg="info" text="white" style={{ width: '18rem' }}>
+                                <Card.Body>
+                                    <Card.Title>{this.state.orders[i].rname}</Card.Title>
+                                    <Card.Text style={{ whiteSpace: 'pre-wrap' }}>
+                                        {this.getinfo(i)}
+                                    </Card.Text>
+                                    <button onClick={() => this.openForm(this.state.orders[i].rid, this.state.orders[i].rname)}>message</button>
+                                </Card.Body>
+                            </Card>
+                        </div>
+                </Draggable>
+            );
+        }
+        
+        return card;
+    }
+
 
     render() {
         let flag = localStorage.getItem("authLogin");
@@ -183,19 +181,9 @@ class Order extends Component {
                             </div>
                         }
 
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Restaurant</th>
-                                    <th>item</th>
-                                    <th>status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {this.createTable()}
-                                
-                            </tbody>
-                        </table>
+                        {this.createCard()}
+
+                        
                 </div> 
             </div> 
         )
