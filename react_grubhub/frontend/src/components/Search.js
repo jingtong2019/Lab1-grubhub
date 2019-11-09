@@ -174,7 +174,7 @@ class Search extends Component {
                     <h1 className="h1_style">We found these dishes for you</h1>
 
                     <label className="h1_style">Choose cuisine type</label>
-                    <select onChange={(e) => this.setState({cuisine_type: e.target.value})}>
+                    <select onChange={(e) => this.setState({cuisine_type: e.target.value, which_page: 1})}>
                         <option value="All" selected>All</option>
                         {this.createSelect()}
                     </select><br/>
